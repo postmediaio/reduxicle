@@ -1,0 +1,23 @@
+{
+  "name": "examples",
+  "version": "0.1.0",
+  "description": "Reduxicle examples",
+  "main": "index.js",
+  "author": "Ben Lorantfy <ben@postmedia.io>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "webpack-serve ./webpack.config.js"
+  },
+  "devDependencies": {
+    "@reduxicle/core": "x.x.x",
+    "babel-loader": "8.0.0-beta.2",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "webpack": "^4.6.0",
+    "webpack-serve": "^0.3.1"
+  },
+  "dependencies": {
+    "immutable": "^3.8.2"
+  }
+}
