@@ -1,7 +1,10 @@
+import React from "react";
 import { camelCase } from "change-case";
-import { AnyAction } from "redux";
+import { AnyAction, Dispatch, compose } from "redux";
 import { InjectedReducers, AnyReducer, AnyObject } from "../types";
 import { fromJS } from "immutable";
+import { MapStateToProps } from "react-redux";
+import hoistNonReactStatics from "hoist-non-react-statics";
 
 /**
  * @name getDisplayName
@@ -27,6 +30,10 @@ export function getKeys(obj: AnyObject) {
 }
 
 export function getIn(obj: AnyObject, keyPath: string[]) {
+  if (!obj) {
+    return undefined;
+  }
+  
   const isImmutable = Boolean(obj.toJS);
   if (isImmutable) {
     return obj.getIn(keyPath);
@@ -75,43 +82,3 @@ export const combineReducers = (injectedReducers: InjectedReducers) => {
     return newState;
   };
 };
-
-export interface INames {
-  [key: string]: string;
-}
-
-export interface IPattern {
-  [key: string]: {
-    default: string,
-    pattern: string,
-  }
-}
-
-export interface IPatternOptions {
-  name?: string;
-}
-
-export const generateNamesFromPattern = (pattern: IPattern, options: IPatternOptions) => {
-  const names: INames = {};
-  Object.keys(pattern).forEach((key) => {
-    if (!options.name) {
-      names[key] = pattern[key].default;
-    }
-
-    names[key] = camelCase(pattern[key].pattern.replace("{name}", `_${options.name}_`));
-  });
-  
-  return names;
-}
-
-export interface ICreateInitialStateOptions {
-  immutable?: boolean,
-}
-
-export const createInitialState = (state: any, options: ICreateInitialStateOptions) => {
-  if (options.immutable) {
-    return fromJS(state);
-  }
-
-  return state;
-}

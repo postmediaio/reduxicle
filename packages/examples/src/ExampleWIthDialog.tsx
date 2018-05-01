@@ -3,8 +3,6 @@ import React from "react";
 import { compose, withKey, withReducer } from "@reduxicle/core";
 import { withDialog } from "@reduxicle/dialog";
 
-import { fromJS } from "immutable";
-
 export interface IExampleWithDialog {
   openAddDialog: () => {};
   closeAddDialog: () => {};
