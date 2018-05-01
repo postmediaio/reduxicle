@@ -4,14 +4,8 @@ import { getDisplayName } from "./utils";
 import hoistNonReactStatics from 'hoist-non-react-statics';
 import { AnyFunction } from "./types";
 
-export interface IUnwrappedComponent {
-  injectReducer: AnyFunction;
-  injectSaga: AnyFunction;
-  ejectSaga: AnyFunction;
-}
-
 const withInjectors = () => {
-  return (UnwrappedComponent: React.ComponentClass<IUnwrappedComponent>) => {
+  return (UnwrappedComponent: React.ComponentClass<any>) => {
     class WrappedComponent extends React.PureComponent {
       public static displayName = `withInjectors(${getDisplayName(UnwrappedComponent)})`;
       public static contextTypes = {
@@ -43,9 +37,12 @@ const withInjectors = () => {
       public render() {
         return <UnwrappedComponent
           {...(this.props)}
-          injectReducer={this.injectReducer}
-          injectSaga={this.injectSaga}
-          ejectSaga={this.ejectSaga}
+          reduxicle={{
+            injectReducer: this.injectReducer,
+            injectSaga: this.injectSaga,
+            ejectSaga: this.ejectSaga,
+            immutable: this.context.store.reduxicle.immutable,
+          }}
         />;
       }
     }

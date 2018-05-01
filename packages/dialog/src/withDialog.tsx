@@ -1,7 +1,10 @@
 import React from "react";
-
-import { generateNamesFromPattern, withInjectors } from "@reduxicle/core/internals";
+import { Dispatch } from "redux";
+import { fromJS } from "immutable";
+import { getIn, connect, compose, generateNamesFromPattern, withInjectors } from "@reduxicle/core/internals";
 import hoistNonReactStatics from "hoist-non-react-statics";
+import createActionPrefix from "./createActionPrefix";
+import createReducer from "./createReducer";
 
 const withDialog = (options: { name: string, key?: string }) => {
   return (UnwrappedComponent: React.ComponentClass & { key: string }) => {
@@ -26,21 +29,41 @@ const withDialog = (options: { name: string, key?: string }) => {
       name: options.name,
     });
 
-    const key = UnwrappedComponent.key || options.key;
-    class WrappedComponent extends React.PureComponent {
+    const parentKey = options.key || UnwrappedComponent.key || "";
+    const key = `${parentKey}.${names.dialogName}`;
+    const prefix = createActionPrefix(key);
+
+    class WrappedComponent extends React.PureComponent<any> {
       public componentDidMount() {
-        // this.props.injectReducer({
-        //   key: `${key}.${names.dialogName}`,
-        //   reducer,
-        // });
+        this.props.reduxicle.injectReducer({
+          key,
+          reducer: createReducer(prefix, this.props.reduxicle),
+        });
       }
       public render() {
-        return <UnwrappedComponent {...(this.props)}/>;
+        const props = { ...this.props };
+        delete props.reduxicle;
+
+        return <UnwrappedComponent {...props} />;
       }
     }
-    
-    return hoistNonReactStatics(withInjectors()(WrappedComponent), UnwrappedComponent);
-  }
-}
+
+    return hoistNonReactStatics(
+      compose(
+        withInjectors(),
+        connect(
+          (state: any) => ({
+            [names.isDialogOpen]: getIn(state, [ ...key.split("."), "open"]),
+          }),
+          (dispatch: Dispatch) => ({
+            [names.openDialog]: () => dispatch({ type: `${prefix}/OPEN` }),
+            [names.closeDialog]: () => dispatch({ type: `${prefix}/CLOSE` }),
+          }),
+        ),
+      )(WrappedComponent),
+    UnwrappedComponent);
+
+  };
+};
 
 export default withDialog;

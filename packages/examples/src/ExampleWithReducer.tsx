@@ -13,9 +13,11 @@ class ExampleWithReducer extends React.Component {
   }
 }
 
-const state = fromJS([
-  { name: "Wayne Gretzky", number: "99" },
-]);
+const state = fromJS({
+  players: [
+    { name: "Wayne Gretzky", number: "99" },
+  ],
+});
 
 export default compose(
   withReducer(() => {

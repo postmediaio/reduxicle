@@ -30,9 +30,12 @@ const createStore = ({ immutable }: { immutable?: boolean } = {}): Store => {
   const enhancer = composeEnhancers(...enhancers);
   const store = createReduxStore(() => (immutable ? fromJS({}) : {}), immutable ? fromJS({}) : {}, enhancer) as Store;
 
-  store.runSaga = sagaMiddleware.run;
-  store.injectedReducers = {}; // Reducer registry
-  store.injectedSagas = {}; // Saga registry
+  store.reduxicle = {
+    injectedReducers: [],
+    injectedSagas: {},
+    runSaga: sagaMiddleware.run,
+    immutable,
+  }
   
   return store;
 };

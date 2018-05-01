@@ -5,7 +5,6 @@
   "main": "index.js",
   "author": "Ben Lorantfy <ben@postmedia.io>",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "build": "babel src -d lib --ignore **/__tests__/**,**/_stories.tsx --extensions \".js,.jsx,.ts,.tsx\"",
     "test": "NODE_ENV=test jest --coverage",

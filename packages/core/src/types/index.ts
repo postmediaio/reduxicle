@@ -11,14 +11,21 @@ export type AnyObject = {
   [key: string]: any;
 };
 
+export type InjectedReducers = [
+  {
+    [key: string]: AnyReducer,
+  }
+];
+
 export type AnyFunction = (...params: any[]) => any;
 export type Store = ReduxStore & {
-  runSaga: (saga: AnyFunction) => Task,
-  injectedReducers: {
-    [key: string]: AnyReducer,
-  },
-  injectedSagas: {
-    [key: string]: InjectedSagaDescriptor,
+  reduxicle: {
+    immutable?: boolean,
+    runSaga: (saga: AnyFunction) => Task,
+    injectedReducers: InjectedReducers,
+    injectedSagas: {
+      [key: string]: InjectedSagaDescriptor,
+    },
   },
 };
 

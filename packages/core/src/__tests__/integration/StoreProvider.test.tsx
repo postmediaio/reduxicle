@@ -30,7 +30,7 @@ describe("StoreProvider", () => {
 
     const wrapper = render();
     const store = wrapper.find(Provider).prop("store") as Store;
-    store.runSaga(fakeSaga);
+    store.reduxicle.runSaga(fakeSaga);
     store.dispatch({ type: "FAKE_ACTION" });
     expect(fakeActionHandler).toBeCalled();
   });

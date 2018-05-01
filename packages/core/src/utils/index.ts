@@ -1,6 +1,7 @@
 import { camelCase } from "change-case";
 import { AnyAction } from "redux";
-import { AnyReducer, AnyObject } from "../types";
+import { InjectedReducers, AnyReducer, AnyObject } from "../types";
+import { fromJS } from "immutable";
 
 /**
  * @name getDisplayName
@@ -58,21 +59,22 @@ export function setIn(obj: AnyObject, keyPath: string[], newValue: any) {
   return newObj;
 }
 
-export const combineReducers = (reducersMap: { [key: string]: AnyReducer }) => {
+export const combineReducers = (injectedReducers: InjectedReducers) => {
   return (state: any, action: AnyAction) => {
     let newState = state;
-    Object.keys(reducersMap).forEach((reducerKey) => {
-      const keyPath = reducerKey.split(".");
-      const reducer = reducersMap[reducerKey];
-      const oldLocalState = getIn(newState, keyPath);
-      const newLocalState = reducer(oldLocalState, action);
-      newState = setIn(newState, keyPath, newLocalState);
+    injectedReducers.forEach((reducersMap) => {
+      Object.keys(reducersMap).forEach((reducerKey) => {
+        const keyPath = reducerKey.split(".");
+        const reducer = reducersMap[reducerKey];
+        const oldLocalState = getIn(state, keyPath);
+        const newLocalState = reducer(oldLocalState, action);
+        newState = setIn(newState, keyPath, newLocalState);
+      });
     });
 
-    // return newState;
     return newState;
-  }
-}
+  };
+};
 
 export interface INames {
   [key: string]: string;
@@ -100,4 +102,16 @@ export const generateNamesFromPattern = (pattern: IPattern, options: IPatternOpt
   });
   
   return names;
+}
+
+export interface ICreateInitialStateOptions {
+  immutable?: boolean,
+}
+
+export const createInitialState = (state: any, options: ICreateInitialStateOptions) => {
+  if (options.immutable) {
+    return fromJS(state);
+  }
+
+  return state;
 }
