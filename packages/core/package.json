@@ -10,6 +10,13 @@
     "test": "NODE_ENV=test jest --coverage",
     "test:watch": "NODE_ENV=test jest --watchAll --coverage"
   },
+  "files": [
+    "lib",
+    "index.d.ts",
+    "index.js",
+    "internals.js",
+    "README.md"
+  ],
   "dependencies": {
     "change-case": "^3.0.2",
     "hoist-non-react-statics": "^2.5.0",

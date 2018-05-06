@@ -1,36 +1,57 @@
 import React from "react";
 import { getDisplayName } from "./utils";
-import { AnyFunction, SagaInjectionModes } from "./types";
+import { AnyFunction, SagaInjectionModes, AnyObject } from "./types";
 import { injectSaga, ejectSaga } from "./injectors"; 
-import hoistNonReactStatics from 'hoist-non-react-statics';
+import hoistNonReactStatics from "hoist-non-react-statics";
 
-const withSaga = ({ key, saga, mode }: { key: string, saga: AnyFunction, mode: SagaInjectionModes }) => {
-  return (UnwrappedComponent: React.ComponentClass) => {
-    class WrappedComponent extends React.PureComponent {
-      public static key = key;
+export type WithSagaOptions = { key: string, saga: AnyFunction, mode: SagaInjectionModes } | AnyFunction;
+
+const withSaga = (options: WithSagaOptions) => {
+  return (UnwrappedComponent: React.ComponentClass & { key: string }) => {
+    const resolvedOptions = {
+      key: typeof options === "function" ? UnwrappedComponent.key : (options.key || UnwrappedComponent.key),
+      saga: typeof options === "function" ? options : options.saga,
+      mode: typeof options === "function" ?
+        SagaInjectionModes.ONCE_TILL_UNMOUNT :
+        (options.mode || SagaInjectionModes.ONCE_TILL_UNMOUNT),
+    };
+
+    class WrappedComponent extends React.PureComponent<AnyObject, { mounted: boolean }> {
+      public static displayName = `withSaga(${getDisplayName(UnwrappedComponent)})`;
+      public static key = resolvedOptions.key;
       public static contextTypes = {
         store: () => null,
       };
 
-      public static displayName = `withSaga(${getDisplayName(UnwrappedComponent)})`;
+      constructor(props: AnyObject) {
+        super(props);
+        this.state = { mounted: false };
+      }
+
       public componentDidMount() {
         injectSaga({
-          key,
-          mode,
-          saga,
+          key: resolvedOptions.key,
+          mode: resolvedOptions.mode,
+          saga: resolvedOptions.saga,
           store: this.context.store,
         });
+
+        this.setState({ mounted: true });
       }
 
       public componentWillUnmount() {
         ejectSaga({
-          key,
+          key: resolvedOptions.key,
           store: this.context.store,
         });
       }
 
       public render() {
-        return <UnwrappedComponent {...(this.props)} />;
+        if (this.state.mounted) {
+          return <UnwrappedComponent {...(this.props)} />;
+        }
+
+        return null;
       }
     }
 

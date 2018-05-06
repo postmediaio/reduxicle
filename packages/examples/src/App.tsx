@@ -3,6 +3,7 @@ import React from "react";
 import { StoreProvider } from "@reduxicle/core";
 import ExampleWithDialog from "./ExampleWithDialog";
 import ExampleWithReducer from "./ExampleWithReducer";
+import ExampleWithForm from "./ExampleWithForm";
 
 class App extends React.Component {
   public render() {
@@ -10,6 +11,7 @@ class App extends React.Component {
       <StoreProvider useImmutableJS>
         <ExampleWithDialog />
         <ExampleWithReducer />
+        <ExampleWithForm />
       </StoreProvider>
     );
   }

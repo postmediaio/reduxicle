@@ -15,6 +15,14 @@ export default class StoreProvider extends React.PureComponent<IStoreProvider> {
     this.store = createStore({ immutable: props.useImmutableJS });
   }
 
+  /**
+   * We expose this function publically so unit tests
+   * can access the store
+   */
+  public getStore() {
+    return this.store;
+  }
+
   public render() {
     return (
       <Provider store={this.store}>

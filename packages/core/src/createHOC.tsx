@@ -64,9 +64,14 @@ const createHOC = (createHOCOptions: ICreateHOC) => {
       const names = generateNamesFromPattern(pattern, options);
       const parentKey = options.key || UnwrappedComponent.key || "";
       const key = createHOCOptions.createKey(parentKey, names);
-      const prefix = `@@reduxicle/${key.split(".").join("/")}`;
-      
-      class WrappedComponent extends React.PureComponent<AnyObject> {
+      const prefix = key.split(".").join("/");
+
+      class WrappedComponent extends React.PureComponent<AnyObject, { mounted: boolean }> {
+        constructor(props: AnyObject) {
+          super(props);
+          this.state = { mounted: false };
+        }
+
         public componentDidMount() {
           const unprocessedState = createHOCOptions.createInitialState();
           const initialState = createInitialState(unprocessedState, this.props.reduxicle);
@@ -76,12 +81,19 @@ const createHOC = (createHOCOptions: ICreateHOC) => {
             key,
             reducer,
           });
+
+          this.setState({ mounted: true });
         }
+
         public render() {
           const props = { ...this.props };
           delete props.reduxicle;
   
-          return <UnwrappedComponent {...props} />;
+          if (this.state.mounted) {
+            return <UnwrappedComponent {...props} />;
+          }
+
+          return null;
         }
       }
 
