@@ -11,8 +11,17 @@ const argv = require('yargs').argv;
 const merge = require('merge2');
 const log = require('fancy-log');
 
+const corePackage = 'reduxicle-core';
 const packagesLoc = './packages';
 const tsProjects = createTSProjects();
+
+function waitUntilStreamEnds(stream) {
+  return new Promise(function(resolve) {
+    stream.on('end', function() {
+      resolve();
+    });
+  });
+}
 
 /**
  * Creates a TS project for each package in the packages directory
@@ -34,7 +43,20 @@ function createTSProjects() {
 gulp.task('build', function() {
   const packages = getRequestedPackages();
   log.info("Building packages:", packages.join(', '))
-  return build(packages);
+  
+  // Make sure we build the core package first, because
+  // the other packages might rely on it
+  let buildCorePackage = Promise.resolve();
+  if (packages.indexOf(corePackage) > -1) {
+    buildCorePackage = waitUntilStreamEnds(build([corePackage]));
+  }
+  
+  return buildCorePackage.then(() => {
+    // After the core package is built, we can build the rest
+    // of the requested packages
+    const nonCorePackages = packages.filter(name => name !== corePackage);
+    return waitUntilStreamEnds(build(nonCorePackages));
+  });
 });
 
 gulp.task('build:watch', function() {
@@ -67,28 +89,46 @@ function build(packages) {
     return tsc(packageName);
   });
 
-  return merge(buildStreams);
+  return merge(buildStreams).on('queueDrain', function() { this.emit('end') });
 }
 
 function tsc(packageName) {
   let hasErrors = false;
+  const validExportFiles = ['index', 'internals'];
   const packageDir = path.join(packagesLoc, packageName);
+
   return gulp
     .src([
       path.join(packageDir, 'src/**/*.ts?(x)'), // All ts files in the src dir
       '!' + path.join(packageDir, 'src/**/*.test.ts?(x)'), // Exclude test files
       '!' + path.join(packageDir, 'src/**/__tests__'), // Exclude test folders
     ])
+    .on('end', function() {
+      // Delete the old definition files so the build doesn't fail
+      validExportFiles.forEach((fileName) => {
+        if (fs.existsSync(`packages/${packageName}/${fileName}.d.ts`)) {
+          fs.unlinkSync(`packages/${packageName}/${fileName}.d.ts`);
+        }
+      });
+    })
     .pipe(tsProjects[packageName]())
     .on('error', function() {
       hasErrors = true;
     })
     .pipe(gulp.dest(path.join(packageDir, 'lib')))
-    .on('end', function(bla) {
+    .on('end', function() {
       if (hasErrors) {
         log.error(packageName + ': failed to build')
         process.exit(1);
       } else {
+        // We need to create the definition files after the build,
+        // otherwise the build will fail
+        validExportFiles.forEach((fileName) => {
+          if (fs.existsSync(`packages/${packageName}/${fileName}.js`)) {
+            fs.writeFileSync(`packages/${packageName}/${fileName}.d.ts`, `export * from "./lib/${fileName}"\n`);
+          }
+        });
+
         log.info(packageName + ': build succeeded');
       }
     });

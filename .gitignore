@@ -4,9 +4,9 @@ lib
 bundles
 node_modules
 stats.json
+*.d.ts
 
 # Cruft
 .DS_Store
 *.log
 .idea
-
