@@ -1,6 +1,6 @@
 import React from "react";
 import { Provider } from "react-redux";
-import { Store } from "redux";
+import { Store, AnyAction } from "redux";
 import createStore from "./createStore";
 
 export interface IStoreProvider {
@@ -18,9 +18,9 @@ export default class StoreProvider extends React.PureComponent<IStoreProvider> {
     this.store = createStore({ immutable: props.useImmutableJS, ...props.config });
   }
 
-  public wrapWithWrappers(children) {
+  public wrapWithWrappers(children: React.ReactNode) {
     let topWrapper = <>{children}</>;
-    const wrappers = this.props.config.plugins.map(plugin => plugin.wrapper).filter(Boolean);
+    const wrappers = this.props.config.plugins.map((plugin) => plugin.wrapper).filter(Boolean);
     wrappers.forEach((wrapper) => {
       topWrapper = React.cloneElement(wrapper, {}, topWrapper);
     });

@@ -4,6 +4,7 @@
  */
 export { compose } from "redux";
 export { connect } from "react-redux";
-export { default as withInjectors } from "./withInjectors";
+export { default as withInjectors, IWithInjectors } from "./withInjectors";
 export { default as createHOC } from "./createHOC";
-export { setIn, getIn, createInitialState, generateNamesFromPattern } from "./utils";
+export { setIn, getIn } from "./utils";
+export { IReduxiclePlugin } from "./types";

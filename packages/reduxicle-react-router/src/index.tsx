@@ -1,10 +1,10 @@
 import React from "react";
-import { IPlugin } from "@reduxicle/core";
+import { IReduxiclePlugin } from "@reduxicle/core/internals";
 import createHistory from "history/createBrowserHistory";
-import { ConnectedRouter, routerReducer, routerMiddleware, push } from 'react-router-redux'
+import { ConnectedRouter, routerReducer, routerMiddleware, push } from "react-router-redux";
 
 const history = createHistory();
-export class ReactRouterPlugin implements IPlugin {
+export class ReactRouterPlugin implements IReduxiclePlugin {
   public key: string;
   public middlewares: any[];
   public reducer: any;

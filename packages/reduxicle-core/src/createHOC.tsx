@@ -1,7 +1,7 @@
 import React from "react";
 import { camelCase } from "change-case";
 import { AnyAction, Dispatch, compose } from "redux";
-import { InjectedReducers, AnyReducer, AnyObject } from "../types";
+import { InjectedReducers, AnyReducer, AnyObject } from "./types";
 import { fromJS } from "immutable";
 import { connect } from "react-redux";
 import hoistNonReactStatics from "hoist-non-react-statics";

@@ -33,8 +33,7 @@ const withSaga = (options: WithSagaOptions) => {
           key: resolvedOptions.key,
           mode: resolvedOptions.mode,
           saga: resolvedOptions.saga,
-          store: this.context.store,
-        });
+        }, this.context.store);
 
         this.setState({ mounted: true });
       }
@@ -42,8 +41,7 @@ const withSaga = (options: WithSagaOptions) => {
       public componentWillUnmount() {
         ejectSaga({
           key: resolvedOptions.key,
-          store: this.context.store,
-        });
+        }, this.context.store);
       }
 
       public render() {

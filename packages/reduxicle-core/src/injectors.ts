@@ -5,10 +5,9 @@ import { AnyFunction, AnyReducer, SagaInjectionModes, Store, InjectedSagaDescrip
 export interface IInjectReducer {
   key: string;
   reducer: AnyReducer;
-  store: Store;
 }
 
-export const injectReducer = ({ key, reducer, store }: IInjectReducer) => {
+export const injectReducer = ({ key, reducer }: IInjectReducer, store: Store) => {
   /**
    * So the issue here is that reducers need to be ran in a certain order.
    * Reducers with more dots in their name (more deeply nested) need to be ran
@@ -39,16 +38,15 @@ export interface IInjectSaga {
   key: string;
   saga: AnyFunction;
   mode: SagaInjectionModes;
-  store: Store;
 }
 
-export const injectSaga = ({ key, saga, mode = SagaInjectionModes.RESTART_ON_REMOUNT, store }: IInjectSaga) => {
+export const injectSaga = ({ key, saga, mode = SagaInjectionModes.RESTART_ON_REMOUNT }: IInjectSaga, store: Store) => {
   const oldDescriptor = store.reduxicle.injectedSagas[key];
   let hasSaga = Boolean(oldDescriptor);
 
   if (process.env.NODE_ENV !== "production") {
     // enable hot reloading of daemon and once-till-unmount sagas
-    if (hasSaga && oldDescriptor.saga !== saga) {
+    if (hasSaga && oldDescriptor !== "done" && oldDescriptor.saga !== saga) {
       oldDescriptor.task.cancel();
       hasSaga = false;
     }
@@ -65,20 +63,19 @@ export const injectSaga = ({ key, saga, mode = SagaInjectionModes.RESTART_ON_REM
 
 export interface IEjectSaga {
   key: string;
-  store: Store;
 }
 
-export const ejectSaga = ({ key, store }: IEjectSaga) => {
+export const ejectSaga = ({ key }: IEjectSaga, store: Store) => {
   const descriptor = store.reduxicle.injectedSagas[key];
   const hasSaga = Boolean(descriptor);
 
   if (hasSaga) {
-    if (descriptor.mode !== SagaInjectionModes.DAEMON) {
+    if (descriptor !== "done" && descriptor.mode !== SagaInjectionModes.DAEMON) {
       descriptor.task.cancel();
       // Clean up in production; in development we need `descriptor.saga` for hot reloading
       if (process.env.NODE_ENV === "production") {
         // Need some value to be able to detect `ONCE_TILL_UNMOUNT` sagas in `injectSaga`
-        store.reduxicle.injectedSagas[key] = 'done'; // eslint-disable-line no-param-reassign
+        store.reduxicle.injectedSagas[key] = "done"; // eslint-disable-line no-param-reassign
       }
     }
   }

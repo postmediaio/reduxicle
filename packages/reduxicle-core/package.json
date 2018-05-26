@@ -6,9 +6,10 @@
   "author": "Ben Lorantfy <ben@postmedia.io>",
   "license": "MIT",
   "scripts": {
-    "build": "babel src -d lib --ignore **/__tests__/**,**/_stories.tsx --extensions \".js,.jsx,.ts,.tsx\"",
     "test": "NODE_ENV=test jest --coverage",
-    "test:watch": "NODE_ENV=test jest --watchAll --coverage"
+    "test:watch": "NODE_ENV=test jest --watchAll --coverage",
+    "build": "gulp build --package=reduxicle-core",
+    "build:watch": "gulp build:watch --package=reduxicle-core"
   },
   "files": [
     "lib",
@@ -27,12 +28,10 @@
     "redux-saga": "^0.16.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.46",
     "@types/react": "^16.3.13",
     "@types/react-redux": "^5.0.19",
     "@types/redux": "^3.6.0",
     "@types/redux-immutable": "^3.0.38",
-    "babel-jest": "^22.4.3",
     "jest": "^22.4.3",
     "react": "^16.3.2"
   }

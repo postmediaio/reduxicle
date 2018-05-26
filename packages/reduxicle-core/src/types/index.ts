@@ -1,6 +1,13 @@
 import { AnyAction, Store as ReduxStore } from "redux";
 import { Task } from "redux-saga";
 
+export interface IReduxiclePlugin {
+  key: string;
+  middlewares: any[];
+  reducer: AnyReducer;
+  wrapper: any;
+}
+
 export type InjectedSagaDescriptor = {
   saga: AnyFunction,
   mode: SagaInjectionModes,
@@ -11,11 +18,9 @@ export type AnyObject = {
   [key: string]: any;
 };
 
-export type InjectedReducers = [
-  {
-    [key: string]: AnyReducer,
-  }
-];
+export type InjectedReducers = Array<{
+  [key: string]: AnyReducer,
+}>;
 
 export type AnyFunction = (...params: any[]) => any;
 export type Store = ReduxStore & {
@@ -24,7 +29,7 @@ export type Store = ReduxStore & {
     runSaga: (saga: AnyFunction) => Task,
     injectedReducers: InjectedReducers,
     injectedSagas: {
-      [key: string]: InjectedSagaDescriptor,
+      [key: string]: InjectedSagaDescriptor|"done",
     },
   },
 };

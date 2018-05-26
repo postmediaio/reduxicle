@@ -1,12 +1,12 @@
 import { applyMiddleware, compose, createStore as createReduxStore } from "redux";
 import { AnyAction } from "redux";
-import { Store } from './types';
+import { Store, InjectedReducers } from "./types";
 import createSagaMiddleware from "redux-saga";
 import { fromJS } from "immutable";
-import { combineReducers } from './utils';
+import { combineReducers } from "./utils";
 
 const createStore = ({ immutable, plugins = [] }: { immutable?: boolean, plugins?: any[] } = {}): Store => {
-  const injectedReducers = [];
+  const injectedReducers: InjectedReducers = [];
   const sagaMiddleware = createSagaMiddleware();
   let middlewares = [
     sagaMiddleware,

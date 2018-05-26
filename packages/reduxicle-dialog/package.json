@@ -10,16 +10,14 @@
     "hoist-non-react-statics": "^2.5.0"
   },
   "scripts": {
-    "build": "babel src -d lib --ignore **/__tests__/**,**/_stories.tsx --extensions \".js,.jsx,.ts,.tsx\"",
-    "build:watch": "babel -w src -d lib --ignore **/__tests__/**,**/_stories.tsx --extensions \".js,.jsx,.ts,.tsx\"",
     "test": "NODE_ENV=test jest --coverage",
-    "test:watch": "NODE_ENV=test jest --watchAll --coverage"
+    "test:watch": "NODE_ENV=test jest --watchAll --coverage",
+    "build": "gulp build --package=reduxicle-dialog",
+    "build:watch": "gulp build:watch --package=reduxicle-dialog"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.46",
     "@types/react": "^16.3.13",
     "@types/redux": "^3.6.0",
-    "babel-jest": "^22.4.3",
     "jest": "^22.4.3",
     "react": "^16.3.2"
   }

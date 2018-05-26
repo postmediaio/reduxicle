@@ -29,8 +29,7 @@ const withReducer = (options: WithReducerOptions) => {
         injectReducer({
           key: resolvedOptions.key,
           reducer: resolvedOptions.reducer,
-          store: this.context.store,
-        });
+        }, this.context.store);
 
         this.setState({ mounted: true });
       }

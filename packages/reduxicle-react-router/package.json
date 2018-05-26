@@ -6,14 +6,15 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build": "babel src -d lib --ignore **/__tests__/**,**/_stories.tsx --extensions \".js,.jsx,.ts,.tsx\""
+    "build": "gulp build --package=reduxicle-react-router",
+    "build:watch": "gulp build:watch --package=reduxicle-react-router"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.46",
     "@types/history": "^4.6.2",
-    "@types/react": "^16.3.14",
+    "@types/react": "^16.3.13",
+    "@types/react-dom": "^16.0.5",
+    "@types/react-router-redux": "^5.0.14",
     "@types/redux": "^3.6.0",
-    "babel-jest": "^22.4.3",
     "jest": "^22.4.3",
     "react": "^16.3.2"
   },

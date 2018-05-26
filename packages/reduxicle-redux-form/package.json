@@ -5,13 +5,12 @@
   "author": "Ben Lorantfy <ben@postmedia.io>",
   "license": "MIT",
   "scripts": {
-    "build": "babel src -d lib --ignore **/__tests__/**,**/_stories.tsx --extensions \".js,.jsx,.ts,.tsx\"",
-    "build:watch": "babel -w src -d lib --ignore **/__tests__/**,**/_stories.tsx --extensions \".js,.jsx,.ts,.tsx\"",
     "test": "NODE_ENV=test jest --coverage",
-    "test:watch": "NODE_ENV=test jest --watchAll --coverage"
+    "test:watch": "NODE_ENV=test jest --watchAll --coverage",
+    "build": "gulp build --package=reduxicle-redux-form",
+    "build:watch": "gulp build:watch --package=reduxicle-redux-form"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.46",
     "@types/react": "^16.3.13",
     "@types/redux-form": "^7.2.4",
     "enzyme": "^3.3.0",

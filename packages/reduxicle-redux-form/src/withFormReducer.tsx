@@ -1,12 +1,16 @@
 import React from "react";
-import { withInjectors } from "@reduxicle/core/internals";
+import { withInjectors, IWithInjectors } from "@reduxicle/core/internals";
 import { reducer as plainReducer } from "redux-form";
 import { reducer as immutableReducer } from "redux-form/immutable";
 
+interface IAnyProps extends IWithInjectors {
+  [key: string]: any;
+}
+
 const withFormReducer = () => {
   return (UnwrappedComponent: React.ComponentClass) => {
-    class WithFormReducer extends React.PureComponent {
-      constructor(props) {
+    class WithFormReducer extends React.PureComponent<IAnyProps, { mounted: boolean }> {
+      constructor(props: IAnyProps) {
         super(props);
         this.state = { mounted: false };
       }
@@ -20,7 +24,7 @@ const withFormReducer = () => {
 
         this.setState({ mounted: true });
       }
-  
+
       public render() {
         if (this.state.mounted) {
           return <UnwrappedComponent {...(this.props)} />;
@@ -29,9 +33,9 @@ const withFormReducer = () => {
         return null;
       }
     }
-  
+
     return withInjectors()(WithFormReducer);
-  }
-}
+  };
+};
 
 export default withFormReducer;

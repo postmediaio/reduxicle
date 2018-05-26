@@ -24,7 +24,8 @@ jobs:
       - save_cache:
           key: dep-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
-              - node_modules
+              - "node_modules"
+              - "**/node_modules"
       - persist_to_workspace:
           root: .
           paths:
@@ -42,7 +43,7 @@ jobs:
           name: Build
           environment:
             NODE_ENV: production
-          command: echo 'woo'
+          command: yarn build
 workflows:
   version: 2
   workflow:
