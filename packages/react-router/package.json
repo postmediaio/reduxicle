@@ -1,0 +1,25 @@
+{
+  "name": "@reduxicle/react-router",
+  "version": "0.1.0",
+  "main": "index.js",
+  "author": "Ben Loranty <ben@postmedia.io>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "build": "babel src -d lib --ignore **/__tests__/**,**/_stories.tsx --extensions \".js,.jsx,.ts,.tsx\""
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0-beta.46",
+    "@types/history": "^4.6.2",
+    "@types/react": "^16.3.14",
+    "@types/redux": "^3.6.0",
+    "babel-jest": "^22.4.3",
+    "jest": "^22.4.3",
+    "react": "^16.3.2"
+  },
+  "dependencies": {
+    "history": "^4.7.2",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.9"
+  }
+}

@@ -3,12 +3,26 @@ import { AnyAction } from "redux";
 import { Store } from './types';
 import createSagaMiddleware from "redux-saga";
 import { fromJS } from "immutable";
+import { combineReducers } from './utils';
 
-const createStore = ({ immutable }: { immutable?: boolean } = {}): Store => {
+const createStore = ({ immutable, plugins = [] }: { immutable?: boolean, plugins?: any[] } = {}): Store => {
+  const injectedReducers = [];
   const sagaMiddleware = createSagaMiddleware();
-  const middlewares = [
+  let middlewares = [
     sagaMiddleware,
   ];
+
+  plugins.forEach((plugin) => {
+    middlewares = middlewares.concat(plugin.middlewares);
+    if (plugin.key && plugin.reducer) {
+      const numDots = (plugin.key.match(/\./g) || []).length;
+      if (!injectedReducers[numDots]) {
+        injectedReducers[numDots] = {};
+      }
+  
+      injectedReducers[numDots][plugin.key] = plugin.reducer;
+    }
+  });
 
   const enhancers = [
     applyMiddleware(...middlewares),
@@ -31,7 +45,7 @@ const createStore = ({ immutable }: { immutable?: boolean } = {}): Store => {
   const store = createReduxStore(() => (immutable ? fromJS({}) : {}), immutable ? fromJS({}) : {}, enhancer) as Store;
 
   store.reduxicle = {
-    injectedReducers: [],
+    injectedReducers,
     injectedSagas: {},
     runSaga: sagaMiddleware.run,
     immutable,

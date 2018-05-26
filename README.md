@@ -8,6 +8,7 @@ Reduxicle is a collection of factories and HOCs to add a layer of abstraction on
 
 ## List of plugins
 - [`@reduxicle/dialog`](#@reduxicle/dialog)
+- [`@reduxicle/react-router`](#@reduxicle/react-router)
 
 ### @reduxicle/dialog
 **Summary**: Open and close a dialog  
@@ -17,3 +18,19 @@ Reduxicle is a collection of factories and HOCs to add a layer of abstraction on
 - `open{name}Dialog`
 - `close{name}Dialog`
 - `{name}DialogIsOpen`
+
+### @reduxicle/react-router
+**Summary**: Integrates react-router with reduxicle
+**Import**: `import { ReactRouterPlugin } from '@reduxicle/react-router'`  
+**Usage**: 
+```js
+const config = {
+  plugins: [
+    new ReactRouterPlugin()
+  ]
+}
+<StoreProvider config={config}>
+  ...
+</StoreProvider>
+```  
+**Injections**: none

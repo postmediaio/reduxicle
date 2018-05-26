@@ -1,6 +1,14 @@
+const convert = require('koa-connect');
+const history = require('connect-history-api-fallback');
+
 module.exports = {
   mode: 'development',
   entry: './src/index.tsx',
+  serve: {
+    add: (app, middleware, options) => {
+      app.use(convert(history()));
+    },
+  },
   output: {
     filename: 'bundle.js'
   },

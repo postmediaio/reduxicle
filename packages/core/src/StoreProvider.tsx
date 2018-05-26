@@ -5,6 +5,9 @@ import createStore from "./createStore";
 
 export interface IStoreProvider {
   useImmutableJS?: boolean;
+  config: {
+    plugins: any[];
+  };
 }
 
 export default class StoreProvider extends React.PureComponent<IStoreProvider> {
@@ -12,7 +15,17 @@ export default class StoreProvider extends React.PureComponent<IStoreProvider> {
   constructor(props: IStoreProvider) {
     super(props);
 
-    this.store = createStore({ immutable: props.useImmutableJS });
+    this.store = createStore({ immutable: props.useImmutableJS, ...props.config });
+  }
+
+  public wrapWithWrappers(children) {
+    let topWrapper = <>{children}</>;
+    const wrappers = this.props.config.plugins.map(plugin => plugin.wrapper).filter(Boolean);
+    wrappers.forEach((wrapper) => {
+      topWrapper = React.cloneElement(wrapper, {}, topWrapper);
+    });
+
+    return topWrapper;
   }
 
   /**
@@ -26,9 +39,7 @@ export default class StoreProvider extends React.PureComponent<IStoreProvider> {
   public render() {
     return (
       <Provider store={this.store}>
-        <>
-          {this.props.children}
-        </>
+        {this.wrapWithWrappers(this.props.children)}
       </Provider>
     );
   }
