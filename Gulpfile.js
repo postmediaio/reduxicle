@@ -89,6 +89,8 @@ function build(packages) {
     return tsc(packageName);
   });
 
+  // For some reason merge swallows the "end" event. A workaround
+  // is to listen for merge's queueDrain event and emit our own end event
   return merge(buildStreams).on('queueDrain', function() { this.emit('end') });
 }
 

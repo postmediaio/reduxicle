@@ -25,7 +25,10 @@ jobs:
           key: dep-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
               - "node_modules"
-              - "**/node_modules"
+              - "packages/reduxicle-core/node_modules"
+              - "packages/reduxicle-dialog/node_modules"
+              - "packages/reduxicle-react-router/node_modules"
+              - "packages/reduxicle-redux-form/node_modules"
       - persist_to_workspace:
           root: .
           paths:
