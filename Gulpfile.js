@@ -137,18 +137,22 @@ function tsc(packageName) {
 }
 
 function getRequestedPackages() {
-  let packageDirNames = [];
   const allPackageDirNames = getAllPackageDirNames();
   if (argv.package) {
     if (allPackageDirNames.indexOf(argv.package) < 0) {
       throw new Error('No such package dir: ' + argv.package);
     }
-    packageDirNames = [argv.package];
-  } else {
-    packageDirNames = allPackageDirNames;
-  }
 
-  return packageDirNames;
+    return [argv.package];
+  } else {
+    if (argv.core) {
+      return [corePackage];
+    } else if (argv.nonCore) {
+      return allPackageDirNames.filter((name) => name !== corePackage);
+    } else {
+      return allPackageDirNames;
+    }
+  }
 }
 
 function getAllPackageDirNames() {

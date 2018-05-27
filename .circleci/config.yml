@@ -33,7 +33,7 @@ jobs:
           root: .
           paths:
             - .
-  build:
+  build-core:
     <<: *defaults
     parallelism: 1
     steps:
@@ -46,7 +46,25 @@ jobs:
           name: Build
           environment:
             NODE_ENV: production
-          command: yarn build
+          command: yarn build --core
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+  build-non-core:
+    <<: *defaults
+    parallelism: 1
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Prepare to build
+          command: cp -R /tmp/workspace/. .
+      - run:
+          name: Build
+          environment:
+            NODE_ENV: production
+          command: yarn build --non-core
   test:
     <<: *defaults
     parallelism: 1
@@ -64,9 +82,12 @@ workflows:
   workflow:
     jobs:
       - prepare
-      - build:
+      - build-core:
           requires:
-            - prepare
+            - prepare        
+      - build-non-core:
+          requires:
+            - build-core
       - test:
           requires:
-            - prepare
+            - build-core
