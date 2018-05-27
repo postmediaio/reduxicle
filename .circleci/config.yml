@@ -79,7 +79,7 @@ jobs:
           command: TEST_PACKAGE=reduxicle-core yarn test
       - run:
           name: Upload coverage
-          command: bash <(curl -s https://codecov.io/bash) -F reduxicle-core
+          command: bash <(curl -s https://codecov.io/bash) -F reduxicle_core
   test-dialog:
     <<: *defaults
     parallelism: 1
@@ -94,7 +94,7 @@ jobs:
           command: TEST_PACKAGE=reduxicle-dialog yarn test
       - run:
           name: Upload coverage
-          command: bash <(curl -s https://codecov.io/bash) -F reduxicle-dialog
+          command: bash <(curl -s https://codecov.io/bash) -F reduxicle_dialog
   test-react-router:
     <<: *defaults
     parallelism: 1
@@ -109,7 +109,7 @@ jobs:
           command: TEST_PACKAGE=reduxicle-react-router yarn test
       - run:
           name: Upload coverage
-          command: bash <(curl -s https://codecov.io/bash) -F reduxicle-react-router
+          command: bash <(curl -s https://codecov.io/bash) -F reduxicle_react_router
   test-redux-form:
     <<: *defaults
     parallelism: 1
@@ -124,7 +124,7 @@ jobs:
           command: TEST_PACKAGE=reduxicle-redux-form yarn test
       - run:
           name: Upload coverage
-          command: bash <(curl -s https://codecov.io/bash) -F reduxicle-redux-form
+          command: bash <(curl -s https://codecov.io/bash) -F reduxicle_redux_form
 workflows:
   version: 2
   workflow:
