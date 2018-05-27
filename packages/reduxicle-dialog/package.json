@@ -10,8 +10,7 @@
     "hoist-non-react-statics": "^2.5.0"
   },
   "scripts": {
-    "test": "NODE_ENV=test jest --coverage",
-    "test:watch": "NODE_ENV=test jest --watchAll --coverage",
+    "test": "cd ../../ && TEST_PACKAGE=reduxicle-dialog yarn test",
     "build": "gulp build --package=reduxicle-dialog",
     "build:watch": "gulp build:watch --package=reduxicle-dialog"
   },
