@@ -21,6 +21,9 @@ module.exports = {
   "setupTestFrameworkScriptFile": "<rootDir>/internals/setupTestFrameworkScriptFile.js",
   "testRegex": 'test\.(ts|js)x?$',
   "transform": {
-    "(js|ts)x?$": "babel-jest"
+    "(js|ts)x?$": "ts-jest"
   },
+  "globals": {
+    "__TS_CONFIG__": "<rootDir>/tsconfig.json"
+  }
 }

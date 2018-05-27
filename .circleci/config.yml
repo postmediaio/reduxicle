@@ -47,6 +47,18 @@ jobs:
           environment:
             NODE_ENV: production
           command: yarn build
+  test:
+    <<: *defaults
+    parallelism: 1
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Prepare to test
+          command: cp -R /tmp/workspace/. .
+      - run:
+          name: Test
+          command: yarn test
 workflows:
   version: 2
   workflow:
@@ -55,3 +67,6 @@ workflows:
       - build:
           requires:
             - prepare
+      - test:
+          requires:
+            - test

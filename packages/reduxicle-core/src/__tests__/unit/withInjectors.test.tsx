@@ -1,6 +1,7 @@
-import React from "react";
+import * as React from "react";
 
 import { mount } from "enzyme";
+import StoreProvider from "../../StoreProvider";
 import withInjectors from "../../withInjectors";
 
 describe("withInjectors", () => {
@@ -12,9 +13,11 @@ describe("withInjectors", () => {
     }
 
     const WrappedComponent = withInjectors()(UnwrappedComponent);
-    const wrapper = mount(<WrappedComponent />);
-    expect(wrapper.find(UnwrappedComponent).prop("injectReducer")).toEqual(expect.any(Function));
-    expect(wrapper.find(UnwrappedComponent).prop("injectSaga")).toEqual(expect.any(Function));
-    expect(wrapper.find(UnwrappedComponent).prop("ejectSaga")).toEqual(expect.any(Function));
+    const wrapper = mount(<StoreProvider><WrappedComponent /></StoreProvider>);
+    expect(wrapper.find(UnwrappedComponent).prop("reduxicle")).toEqual({
+      injectReducer: expect.any(Function),
+      injectSaga: expect.any(Function),
+      ejectSaga: expect.any(Function),
+    });
   });
 });

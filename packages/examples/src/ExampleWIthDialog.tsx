@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 
 import { compose, withKey, withReducer } from "@reduxicle/core";
 import { withDialog } from "@reduxicle/dialog";

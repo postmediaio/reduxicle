@@ -1,6 +1,6 @@
 // tslint:disable max-classes-per-file
 
-import React from "react";
+import * as React from "react";
 import { reduxForm, Field } from "redux-form/immutable";
 import { withFormReducer } from "@reduxicle/redux-form";
 

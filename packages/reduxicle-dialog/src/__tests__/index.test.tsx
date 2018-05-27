@@ -1,4 +1,5 @@
-import React from "react";
+import * as React from "react";
+import { StoreProvider } from "@reduxicle/core";
 import { withDialog } from "../index";
 import { mount } from "enzyme";
 
@@ -12,6 +13,6 @@ describe("withDialog", () => {
     }
 
     const WrappedComponent = withDialog({ name: "myDialog" })(UnwrappedComponent);
-    const wrapper = mount(<WrappedComponent />);
+    const wrapper = mount(<StoreProvider><WrappedComponent /></StoreProvider>);
   })
 });

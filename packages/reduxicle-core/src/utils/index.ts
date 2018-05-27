@@ -1,10 +1,10 @@
-import React from "react";
+import * as React from "react";
 import { camelCase } from "change-case";
 import { AnyAction, Dispatch, compose } from "redux";
 import { InjectedReducers, AnyReducer, AnyObject } from "../types";
 import { fromJS } from "immutable";
 import { MapStateToProps } from "react-redux";
-import hoistNonReactStatics from "hoist-non-react-statics";
+const hoistNonReactStatics = require("hoist-non-react-statics"); // tslint:disable-line no-var-requires
 
 /**
  * @name getDisplayName

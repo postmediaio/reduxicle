@@ -2,6 +2,13 @@
 
 exports[`internals should not have changed API 1`] = `
 Object {
+  "IReduxiclePlugin": undefined,
+  "IWithInjectors": undefined,
+  "compose": [Function],
+  "connect": [Function],
+  "createHOC": [Function],
+  "getIn": [Function],
+  "setIn": [Function],
   "withInjectors": [Function],
 }
 `;

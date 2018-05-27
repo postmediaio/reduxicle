@@ -1,8 +1,8 @@
-import React from "react";
+import * as React from "react";
 import { injectReducer, injectSaga, IInjectReducer, IInjectSaga, IEjectSaga, ejectSaga } from "./injectors";
 import { getDisplayName } from "./utils";
-import hoistNonReactStatics from "hoist-non-react-statics";
 import { AnyFunction } from "./types";
+const hoistNonReactStatics = require("hoist-non-react-statics"); // tslint:disable-line no-var-requires
 
 export interface IWithInjectors {
   reduxicle: {

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { withInjectors, IWithInjectors } from "@reduxicle/core/internals";
 import { reducer as plainReducer } from "redux-form";
 import { reducer as immutableReducer } from "redux-form/immutable";

@@ -1,13 +1,13 @@
-import React from "react";
+import * as React from "react";
 import { getDisplayName } from "./utils";
 import { AnyFunction, SagaInjectionModes, AnyObject } from "./types";
 import { injectSaga, ejectSaga } from "./injectors"; 
-import hoistNonReactStatics from "hoist-non-react-statics";
+const hoistNonReactStatics = require("hoist-non-react-statics"); // tslint:disable-line no-var-requires
 
-export type WithSagaOptions = { key: string, saga: AnyFunction, mode: SagaInjectionModes } | AnyFunction;
+export type WithSagaOptions = { key: string, saga: AnyFunction, mode?: SagaInjectionModes } | AnyFunction;
 
 const withSaga = (options: WithSagaOptions) => {
-  return (UnwrappedComponent: React.ComponentClass & { key: string }) => {
+  return (UnwrappedComponent: React.ComponentClass & { key?: string }) => {
     const resolvedOptions = {
       key: typeof options === "function" ? UnwrappedComponent.key : (options.key || UnwrappedComponent.key),
       saga: typeof options === "function" ? options : options.saga,
@@ -29,19 +29,25 @@ const withSaga = (options: WithSagaOptions) => {
       }
 
       public componentDidMount() {
-        injectSaga({
-          key: resolvedOptions.key,
-          mode: resolvedOptions.mode,
-          saga: resolvedOptions.saga,
-        }, this.context.store);
+        if (resolvedOptions.key) {
+          injectSaga({
+            key: resolvedOptions.key,
+            mode: resolvedOptions.mode,
+            saga: resolvedOptions.saga,
+          }, this.context.store);
+        }
+
+        // TODO: Warn if not using key
 
         this.setState({ mounted: true });
       }
 
       public componentWillUnmount() {
-        ejectSaga({
-          key: resolvedOptions.key,
-        }, this.context.store);
+        if (resolvedOptions.key) {
+          ejectSaga({
+            key: resolvedOptions.key,
+          }, this.context.store);
+        }
       }
 
       public render() {

@@ -1,8 +1,8 @@
-import React from "react";
+import * as React from "react";
 import { getDisplayName } from "./utils";
 import { AnyReducer, AnyObject } from "./types";
 import { injectReducer } from "./injectors";
-import hoistNonReactStatics from "hoist-non-react-statics";
+const hoistNonReactStatics = require("hoist-non-react-statics"); // tslint:disable-line no-var-requires
 
 export type WithReducerOptions = { key: string, reducer: AnyReducer } | AnyReducer;
 

@@ -43,7 +43,6 @@ export interface IInjectSaga {
 export const injectSaga = ({ key, saga, mode = SagaInjectionModes.RESTART_ON_REMOUNT }: IInjectSaga, store: Store) => {
   const oldDescriptor = store.reduxicle.injectedSagas[key];
   let hasSaga = Boolean(oldDescriptor);
-
   if (process.env.NODE_ENV !== "production") {
     // enable hot reloading of daemon and once-till-unmount sagas
     if (hasSaga && oldDescriptor !== "done" && oldDescriptor.saga !== saga) {

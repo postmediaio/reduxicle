@@ -1,6 +1,6 @@
 // tslint:disable max-classes-per-file
 
-import React from "react";
+import * as React from "react";
 
 import { fromJS } from "immutable";
 import { getDisplayName, setIn, getIn, getKeys, generateNamesFromPattern } from "../index";
@@ -206,35 +206,4 @@ describe("getDisplayName", () => {
   it("should get the display name for class components with an explicit display name", () => {
     expect(getDisplayName(ClassComponentWithDisplayName)).toEqual("MyCoolDisplayName");
   });
-});
-
-describe("generateNamesFromPatterns", () => {
-  it("should generate propper names from patterns", () => {
-    const pattern = {
-      dialogName: {
-        default: "dialog",
-        pattern: "{name}Dialog",
-      },
-      isDialogOpen: {
-        default: "isDialogOpen",
-        pattern: "is{name}DialogOpen",
-      },
-      openDialog: {
-        default: "openDialog",
-        pattern: "open{name}Dialog",
-      },
-      closeDialog: {
-        default: "closeDialog",
-        pattern: "close{name}Dialog"
-      },
-    };
-
-    const names = generateNamesFromPattern(pattern, { name: "products" });
-    expect(names).toEqual({
-      dialogName: "productsDialog",
-      isDialogOpen: "isProductsDialogOpen",
-      openDialog: "openProductsDialog",
-      closeDialog: "closeProductsDialog",
-    });
-  })
 });

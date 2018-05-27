@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { IReduxiclePlugin } from "@reduxicle/core/internals";
 import createHistory from "history/createBrowserHistory";
 import { ConnectedRouter, routerReducer, routerMiddleware, push } from "react-router-redux";
@@ -19,7 +19,7 @@ export class ReactRouterPlugin implements IReduxiclePlugin {
   }
 }
 
-// import ReactRouterPlugin from '@reduxicle/react-router';
+// import * as ReactRouterPlugin from '@reduxicle/react-router';
 // import ReduxFormPlugin from '@reduxicle/redux-form';
 // import ImmutableJSPlugin from '@reduxicle/immutable-js';
 

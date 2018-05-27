@@ -1,6 +1,6 @@
 // tslint:disable max-classes-per-file
 
-import React from 'react';
+import * as React from 'react';
 import { fromJS } from 'immutable';
 import StoreProvider from "../../StoreProvider";
 import { Provider } from "react-redux";
