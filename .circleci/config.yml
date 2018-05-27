@@ -65,7 +65,7 @@ jobs:
           environment:
             NODE_ENV: production
           command: yarn build --non-core
-  test:
+  test-core:
     <<: *defaults
     parallelism: 1
     steps:
@@ -76,7 +76,43 @@ jobs:
           command: cp -R /tmp/workspace/. .
       - run:
           name: Test
-          command: yarn test
+          command: TEST_PACKAGE=reduxicle-core yarn test
+  test-dialog:
+    <<: *defaults
+    parallelism: 1
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Prepare to test
+          command: cp -R /tmp/workspace/. .
+      - run:
+          name: Test
+          command: TEST_PACKAGE=reduxicle-dialog yarn test
+  test-react-router:
+    <<: *defaults
+    parallelism: 1
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Prepare to test
+          command: cp -R /tmp/workspace/. .
+      - run:
+          name: Test
+          command: TEST_PACKAGE=reduxicle-react-router yarn test
+  test-redux-form:
+    <<: *defaults
+    parallelism: 1
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Prepare to test
+          command: cp -R /tmp/workspace/. .
+      - run:
+          name: Test
+          command: TEST_PACKAGE=reduxicle-redux-form yarn test
 workflows:
   version: 2
   workflow:
@@ -88,6 +124,15 @@ workflows:
       - build-non-core:
           requires:
             - build-core
-      - test:
+      - test-core:
+          requires:
+            - prepare
+      - test-dialog:
+          requires:
+            - build-core
+      - test-react-router:
+          requires:
+            - build-core
+      - test-redux-form:
           requires:
             - build-core

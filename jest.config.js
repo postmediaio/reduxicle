@@ -1,6 +1,22 @@
+function getTestRegex() {
+  if (process.env.TEST_PACKAGE) {
+    return `${process.env.TEST_PACKAGE}.*test\.(ts|js)x?$`;
+  }
+
+  return 'test\\.(ts|js)x?$';
+}
+
+function getCoverageGlob() {
+  if (process.env.TEST_PACKAGE) {
+    return `**/${process.env.TEST_PACKAGE}/src/**/*.{ts,tsx,js,jsx}`;
+  }
+
+  return '**/src/**/*.{ts,tsx,js,jsx}';
+}
+
 module.exports = {
   "collectCoverageFrom": [
-    `src/**/*.{ts,tsx,js,jsx}`,
+    getCoverageGlob(),
     "!src/**/*.test.{ts,tsx,js,jsx}",
     "!src/*/RbGenerated*/*.{ts,tsx,js,jsx}",
     "!src/**/_stories.{ts,tsx}"
@@ -19,7 +35,7 @@ module.exports = {
     "/lib/"
   ],
   "setupTestFrameworkScriptFile": "<rootDir>/internals/setupTestFrameworkScriptFile.js",
-  "testRegex": 'test\.(ts|js)x?$',
+  "testRegex": getTestRegex(),
   "transform": {
     "(js|ts)x?$": "ts-jest"
   },
