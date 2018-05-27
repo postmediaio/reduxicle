@@ -69,4 +69,4 @@ workflows:
             - prepare
       - test:
           requires:
-            - test
+            - prepare
