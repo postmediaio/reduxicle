@@ -6,6 +6,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
+    "test": "cd ../../ && TEST_PACKAGE=reduxicle-react-router yarn test",
     "build": "gulp build --package=reduxicle-react-router",
     "build:watch": "gulp build:watch --package=reduxicle-react-router"
   },

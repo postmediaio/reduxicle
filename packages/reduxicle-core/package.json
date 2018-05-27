@@ -6,8 +6,7 @@
   "author": "Ben Lorantfy <ben@postmedia.io>",
   "license": "MIT",
   "scripts": {
-    "test": "NODE_ENV=test jest --coverage",
-    "test:watch": "NODE_ENV=test jest --watchAll --coverage",
+    "test": "cd ../../ && TEST_PACKAGE=reduxicle-core yarn test",
     "build": "gulp build --package=reduxicle-core",
     "build:watch": "gulp build:watch --package=reduxicle-core"
   },

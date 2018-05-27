@@ -5,8 +5,7 @@
   "author": "Ben Lorantfy <ben@postmedia.io>",
   "license": "MIT",
   "scripts": {
-    "test": "NODE_ENV=test jest --coverage",
-    "test:watch": "NODE_ENV=test jest --watchAll --coverage",
+    "test": "cd ../../ && TEST_PACKAGE=reduxicle-redux-form yarn test",
     "build": "gulp build --package=reduxicle-redux-form",
     "build:watch": "gulp build:watch --package=reduxicle-redux-form"
   },
