@@ -2,6 +2,8 @@
 
 exports[`internals should not have changed API 1`] = `
 Object {
+  "IReduxicleConfig": undefined,
+  "IReduxicleConfigWithoutPlugins": undefined,
   "IReduxiclePlugin": undefined,
   "IWithInjectors": undefined,
   "compose": [Function],

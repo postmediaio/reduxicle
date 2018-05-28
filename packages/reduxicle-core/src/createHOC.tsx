@@ -38,11 +38,11 @@ export const generateNamesFromPattern = (pattern: IPattern, options: IPatternOpt
 }
 
 export interface ICreateInitialStateOptions {
-  immutable?: boolean;
+  useImmutableJS?: boolean;
 }
 
 export const createInitialState = (state: any, options: ICreateInitialStateOptions) => {
-  if (options.immutable) {
+  if (options.useImmutableJS) {
     return fromJS(state);
   }
 
@@ -75,7 +75,7 @@ const createHOC = (createHOCOptions: ICreateHOC) => {
 
         public componentDidMount() {
           const unprocessedState = createHOCOptions.createInitialState();
-          const initialState = createInitialState(unprocessedState, this.props.reduxicle);
+          const initialState = createInitialState(unprocessedState, this.props.reduxicle.config);
           const reducer = createHOCOptions.createReducer(initialState, { prefix });
 
           this.props.reduxicle.injectReducer({

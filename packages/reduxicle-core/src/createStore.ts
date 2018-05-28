@@ -1,35 +1,49 @@
 import { applyMiddleware, compose, createStore as createReduxStore } from "redux";
 import { AnyAction } from "redux";
-import { Store, InjectedReducers } from "./types";
+import { Store, InjectedReducers, IReduxicleConfig } from "./types";
 import createSagaMiddleware from "redux-saga";
 import { fromJS } from "immutable";
 import { combineReducers } from "./utils";
 
-const createStore = ({ immutable, plugins = [] }: { immutable?: boolean, plugins?: any[] } = {}): Store => {
+const createStore = (config: IReduxicleConfig = {}): Store => {
   const injectedReducers: InjectedReducers = [];
   const sagaMiddleware = createSagaMiddleware();
+  const plugins = config.plugins || [];
+  const useImmutableJS = Boolean(config.useImmutableJS);
+
   let middlewares = [
     sagaMiddleware,
   ];
 
   plugins.forEach((plugin) => {
-    middlewares = middlewares.concat(plugin.middlewares);
+    /**
+     * If the plugin has an initialize method, we want to call it
+     * with the reduxicle config. This let's the plugin developer do
+     * more configuration based on the global reduxicle config, not just
+     * their own config
+     */
+    if (plugin.initialize) {
+      const configWithoutPlugins = { ...config };
+      delete configWithoutPlugins.plugins;
+      
+      plugin.initialize(configWithoutPlugins);
+    }
+    
+    middlewares = middlewares.concat(plugin.middlewares || []);
     if (plugin.key && plugin.reducer) {
       const numDots = (plugin.key.match(/\./g) || []).length;
       if (!injectedReducers[numDots]) {
         injectedReducers[numDots] = {};
       }
-  
+
       injectedReducers[numDots][plugin.key] = plugin.reducer;
     }
   });
-
   const enhancers = [
     applyMiddleware(...middlewares),
   ];
 
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose
-  /* eslint-disable no-underscore-dangle */
   const composeEnhancers =
     process.env.NODE_ENV !== "production" &&
     typeof window === "object" &&
@@ -39,16 +53,19 @@ const createStore = ({ immutable, plugins = [] }: { immutable?: boolean, plugins
         shouldHotReload: false,
       })
       : compose;
-  /* eslint-enable */
 
   const enhancer = composeEnhancers(...enhancers);
-  const store = createReduxStore(() => (immutable ? fromJS({}) : {}), immutable ? fromJS({}) : {}, enhancer) as Store;
+  const store = createReduxStore(
+    combineReducers(injectedReducers),
+    useImmutableJS ? fromJS({}) : {},
+    enhancer,
+  ) as Store;
 
   store.reduxicle = {
     injectedReducers,
     injectedSagas: {},
     runSaga: sagaMiddleware.run,
-    immutable,
+    config,
   }
   
   return store;

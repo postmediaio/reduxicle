@@ -18,6 +18,7 @@ describe("withInjectors", () => {
       injectReducer: expect.any(Function),
       injectSaga: expect.any(Function),
       ejectSaga: expect.any(Function),
+      config: {},
     });
   });
 });

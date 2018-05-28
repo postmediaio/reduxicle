@@ -3,9 +3,27 @@ import { Task } from "redux-saga";
 
 export interface IReduxiclePlugin {
   key: string;
-  middlewares: any[];
-  reducer: AnyReducer;
-  wrapper: any;
+  middlewares?: any[];
+  reducer?: AnyReducer;
+  wrapper?: any;
+  initialize?: (reduxicleConfig: IReduxicleConfigWithoutPlugins) => void;
+}
+
+export interface IReduxicleConfigWithoutPlugins {
+  useImmutableJS?: boolean;
+}
+
+export interface IReduxicleConfig extends IReduxicleConfigWithoutPlugins {
+  plugins?: IReduxiclePlugin[];
+}
+
+export interface IReduxicleContext {
+  config: IReduxicleConfig;
+  runSaga: (saga: AnyFunction) => Task;
+  injectedReducers: InjectedReducers;
+  injectedSagas: {
+    [key: string]: InjectedSagaDescriptor|"done";
+  };
 }
 
 export type InjectedSagaDescriptor = {
@@ -24,14 +42,7 @@ export type InjectedReducers = Array<{
 
 export type AnyFunction = (...params: any[]) => any;
 export type Store = ReduxStore & {
-  reduxicle: {
-    immutable?: boolean,
-    runSaga: (saga: AnyFunction) => Task,
-    injectedReducers: InjectedReducers,
-    injectedSagas: {
-      [key: string]: InjectedSagaDescriptor|"done",
-    },
-  },
+  reduxicle: IReduxicleContext,
 };
 
 export type AnyReducer = (state: AnyObject, action: AnyAction) => AnyObject;

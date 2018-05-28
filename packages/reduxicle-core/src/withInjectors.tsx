@@ -1,12 +1,12 @@
 import * as React from "react";
 import { injectReducer, injectSaga, IInjectReducer, IInjectSaga, IEjectSaga, ejectSaga } from "./injectors";
 import { getDisplayName } from "./utils";
-import { AnyFunction } from "./types";
+import { AnyFunction, IReduxicleConfig } from "./types";
 const hoistNonReactStatics = require("hoist-non-react-statics"); // tslint:disable-line no-var-requires
 
 export interface IWithInjectors {
   reduxicle: {
-    immutable: boolean;
+    config: IReduxicleConfig;
     injectReducer: (options: IInjectReducer) => void;
     injectSaga: (options: IInjectSaga) => void;
     ejectSaga: (options: IEjectSaga) => void;
@@ -41,7 +41,7 @@ function withInjectors<T extends object>() {
             injectReducer: this.injectReducer,
             injectSaga: this.injectSaga,
             ejectSaga: this.ejectSaga,
-            immutable: this.context.store.reduxicle.immutable,
+            config: this.context.store.reduxicle.config,
           }}
         />;
       }

@@ -1,9 +1,9 @@
 import * as React from "react";
-import { IReduxiclePlugin } from "@reduxicle/core/internals";
+import { IReduxiclePlugin, IReduxicleConfigWithoutPlugins } from "@reduxicle/core/internals";
 import createHistory from "history/createBrowserHistory";
 import { ConnectedRouter, routerReducer, routerMiddleware, push } from "react-router-redux";
-
 const history = createHistory();
+
 export class ReactRouterPlugin implements IReduxiclePlugin {
   public key: string;
   public middlewares: any[];
@@ -18,24 +18,3 @@ export class ReactRouterPlugin implements IReduxiclePlugin {
     this.wrapper = <ConnectedRouter history={history} />;
   }
 }
-
-// import * as ReactRouterPlugin from '@reduxicle/react-router';
-// import ReduxFormPlugin from '@reduxicle/redux-form';
-// import ImmutableJSPlugin from '@reduxicle/immutable-js';
-
-// const StoreProvider = createStoreProvider([
-//   new ReactRouterPlugin(),
-//   new ReduxFormPlugin(),
-//   new ImmutableJSPlugin(),
-// ]);
-
-// const config = {
-//   plugins: [
-//     new ReactRouterPlugin(),
-//     new ReduxFormPlugin(),
-//     new ImmutableJSPlugin(),
-//   ],
-//   apiService
-// }
-
-// <StoreProvider config={config}/>
