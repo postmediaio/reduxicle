@@ -1,7 +1,7 @@
 import * as React from "react";
 import { IReduxiclePlugin, IReduxicleConfigWithoutPlugins } from "@reduxicle/core/internals";
 import createHistory from "history/createBrowserHistory";
-import { ConnectedRouter, routerReducer, routerMiddleware, push } from "react-router-redux";
+import { ConnectedRouter, routerReducer, routerMiddleware } from "react-router-redux";
 const history = createHistory();
 
 export class ReactRouterPlugin implements IReduxiclePlugin {
