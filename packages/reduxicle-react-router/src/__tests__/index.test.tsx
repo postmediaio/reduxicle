@@ -23,6 +23,7 @@ describe("ReactRouterPlugin", () => {
         new ReactRouterPlugin(),
       ],
     });
+
     const store = wrapper.instance().getStore();
     const state = store.getState();
     expect(state).toEqual({

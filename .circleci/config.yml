@@ -29,6 +29,13 @@ jobs:
               - "packages/reduxicle-dialog/node_modules"
               - "packages/reduxicle-react-router/node_modules"
               - "packages/reduxicle-redux-form/node_modules"
+      - run:
+          name: Check Changes
+          command: |
+            for folder in `git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | cut -d"/" -f1 | sort -u`; do
+                echo "contents in $folder were modified"
+                #this would be a call to specific testing, etc on changed directory
+            done
       - persist_to_workspace:
           root: .
           paths:
