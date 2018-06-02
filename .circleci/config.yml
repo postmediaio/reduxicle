@@ -39,7 +39,10 @@ jobs:
             dest_branch=master
 
             if [[ -n $CIRCLE_PR_USERNAME && $CIRCLE_PROJECT_USERNAME != $CIRCLE_PR_USERNAME && $CIRCLE_PROJECT_USERNAME = $username ]]; then
+                echo "Detected this is a PR from a fork"
                 is_pr_from_fork=1
+            else
+                echo "Detected this is not a PR from a fork"
             fi
 
             if [[ $is_pr_from_fork = 1 ]]; then
@@ -49,6 +52,7 @@ jobs:
                 dest_branch=$CIRCLE_BRANCH
                 should_build_everything=0
             fi
+            echo "Detected dest_branch is $dest_branch"
             
             if [[ $should_build_everything = 0 ]]; then
                 echo "Decided to only build packages which have changed"
