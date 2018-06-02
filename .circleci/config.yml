@@ -32,7 +32,10 @@ jobs:
       - run:
           name: Check Changes
           command: |
-            for folder in `git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | cut -d"/" -f2 | sort -u`; do
+            lastest_commit_to_dest_branch="$(git ls-remote git://github.com/postmediaio/reduxicle.git refs/heads/master | cut -f 1)"
+            # latest_commit_to_pr="$(git log -n 1 --pretty=format:"%H")"
+            # echo "Comparing $lastest_commit_to_dest_branch to $latest_commit_to_pr"
+            for folder in `git log --format="" --name-only $lastest_commit_to_dest_branch^.. | cut -d"/" -f2 | sort -u`; do
                 echo "contents in $folder were modified"
                 #this would be a call to specific testing, etc on changed directory
             done
