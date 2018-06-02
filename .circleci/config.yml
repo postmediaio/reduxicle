@@ -32,17 +32,37 @@ jobs:
       - run:
           name: Determine which projects to build
           command: |
+            username=postmediaio
+            project=reduxicle
+            should_build_everything=1
             is_pr_from_fork=0
-            if [ "$CIRCLE_PROJECT_USERNAME" != "$CIRCLE_PR_USERNAME" ]; then
+            dest_branch=master
+
+            if [[ -n $CIRCLE_PR_USERNAME && $CIRCLE_PROJECT_USERNAME != $CIRCLE_PR_USERNAME && $CIRCLE_PROJECT_USERNAME = $username ]]; then
                 is_pr_from_fork=1
             fi
 
-            echo "$is_pr_from_fork"
-            lastest_commit_to_dest_branch="$(git ls-remote git://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git refs/heads/master | cut -f 1)"
-            for folder in `git log --format="" --name-only $lastest_commit_to_dest_branch^.. | cut -d"/" -f2 | sort -u`; do
-                echo "contents in $folder were modified"
-                #this would be a call to specific testing, etc on changed directory
-            done
+            if [[ $is_pr_from_fork = 1 ]]; then
+                dest_branch=$(curl -s https://api.github.com/repos/$username/$project/pulls/$CIRCLE_PR_NUMBER | jq -r '.head.ref')
+                should_build_everything=0
+            elif [[ $CIRCLE_BRANCH != "master" ]]; then
+                dest_branch=$CIRCLE_BRANCH
+                should_build_everything=0
+            fi
+            
+            if [[ $should_build_everything = 0 ]]; then
+                echo "Decided to only build packages which have changed"
+                lastest_commit_to_dest_branch="$(git ls-remote git://github.com/$username/$project.git refs/heads/$dest_branch | cut -f 1)"
+                for folder in $(git log --format="" --name-only $lastest_commit_to_dest_branch^.. | cut -d"/" -f2 | sort -u); do
+                    if [[ -d "./packages/$foler" ]]; then
+                        echo "Detected $folder package was modified"
+                        echo $folder >> ./.circleci/projects-to-build.txt
+                    fi
+                done
+            else
+                echo "Decided to build everything"
+                echo "Should build everything" >> ./.circleci/should-build-everything.txt
+            fi
       - persist_to_workspace:
           root: .
           paths:
