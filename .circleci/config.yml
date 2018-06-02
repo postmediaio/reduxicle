@@ -30,11 +30,15 @@ jobs:
               - "packages/reduxicle-react-router/node_modules"
               - "packages/reduxicle-redux-form/node_modules"
       - run:
-          name: Check Changes
+          name: Determine which projects to build
           command: |
-            lastest_commit_to_dest_branch="$(git ls-remote git://github.com/postmediaio/reduxicle.git refs/heads/master | cut -f 1)"
-            # latest_commit_to_pr="$(git log -n 1 --pretty=format:"%H")"
-            # echo "Comparing $lastest_commit_to_dest_branch to $latest_commit_to_pr"
+            is_pr_from_fork=0
+            if [ "$CIRCLE_PROJECT_USERNAME" != "$CIRCLE_PR_USERNAME" ]; then
+                is_pr_from_fork=1
+            fi
+
+            echo "$is_pr_from_fork"
+            lastest_commit_to_dest_branch="$(git ls-remote git://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git refs/heads/master | cut -f 1)"
             for folder in `git log --format="" --name-only $lastest_commit_to_dest_branch^.. | cut -d"/" -f2 | sort -u`; do
                 echo "contents in $folder were modified"
                 #this would be a call to specific testing, etc on changed directory
