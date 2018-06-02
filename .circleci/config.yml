@@ -58,6 +58,7 @@ jobs:
                 echo "Decided to only build packages which have changed"
                 lastest_commit_to_dest_branch="$(git ls-remote git://github.com/$username/$project.git refs/heads/$dest_branch | cut -f 1)"
                 for folder in $(git log --format="" --name-only $lastest_commit_to_dest_branch^.. | cut -d"/" -f2 | sort -u); do
+                    echo "bla is $folder"
                     if [[ -d "./packages/$foler" ]]; then
                         echo "Detected $folder package was modified"
                         echo $folder >> ./.circleci/projects-to-build.txt
