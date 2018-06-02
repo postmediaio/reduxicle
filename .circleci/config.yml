@@ -32,6 +32,7 @@ jobs:
       - run:
           name: Check Changes
           command: |
+            echo "Comparing these commits: ${CIRCLE_COMPARE_URL##http*/}"
             for folder in `git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | cut -d"/" -f2 | sort -u`; do
                 echo "contents in $folder were modified"
                 #this would be a call to specific testing, etc on changed directory
