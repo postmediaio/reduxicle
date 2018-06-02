@@ -30,15 +30,44 @@ jobs:
               - "packages/reduxicle-react-router/node_modules"
               - "packages/reduxicle-redux-form/node_modules"
       - run:
-          name: Check Changes
+          name: Determine which projects to build
           command: |
-            lastest_commit_to_dest_branch="$(git ls-remote git://github.com/postmediaio/reduxicle.git refs/heads/master | cut -f 1)"
-            # latest_commit_to_pr="$(git log -n 1 --pretty=format:"%H")"
-            # echo "Comparing $lastest_commit_to_dest_branch to $latest_commit_to_pr"
-            for folder in `git log --format="" --name-only $lastest_commit_to_dest_branch^.. | cut -d"/" -f2 | sort -u`; do
-                echo "contents in $folder were modified"
-                #this would be a call to specific testing, etc on changed directory
-            done
+            username=postmediaio
+            project=reduxicle
+            should_build_everything=1
+            is_pr_from_fork=0
+            dest_branch=master
+
+            if [[ -n $CIRCLE_PR_USERNAME && $CIRCLE_PROJECT_USERNAME != $CIRCLE_PR_USERNAME && $CIRCLE_PROJECT_USERNAME = $username ]]; then
+                echo "Detected this is a PR from a fork"
+                is_pr_from_fork=1
+            else
+                echo "Detected this is not a PR from a fork"
+            fi
+
+            if [[ $is_pr_from_fork = 1 ]]; then
+                dest_branch=$(curl -s https://api.github.com/repos/$username/$project/pulls/$CIRCLE_PR_NUMBER | jq -r '.head.ref')
+                should_build_everything=0
+            elif [[ $CIRCLE_BRANCH != "master" ]]; then
+                dest_branch=$CIRCLE_BRANCH
+                should_build_everything=0
+            fi
+            echo "Detected dest_branch is $dest_branch"
+            
+            if [[ $should_build_everything = 0 ]]; then
+                echo "Decided to only build packages which have changed"
+                lastest_commit_to_dest_branch="$(git ls-remote git://github.com/$username/$project.git refs/heads/$dest_branch | cut -f 1)"
+                for folder in $(git log --format="" --name-only $lastest_commit_to_dest_branch^.. | cut -d"/" -f2 | sort -u); do
+                    echo "bla is $folder"
+                    if [[ -d "./packages/$foler" ]]; then
+                        echo "Detected $folder package was modified"
+                        echo $folder >> ./.circleci/projects-to-build.txt
+                    fi
+                done
+            else
+                echo "Decided to build everything"
+                echo "Should build everything" >> ./.circleci/should-build-everything.txt
+            fi
       - persist_to_workspace:
           root: .
           paths:
