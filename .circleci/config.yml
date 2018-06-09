@@ -23,15 +23,13 @@ test-package: &test-package
             name: Run tests
             command: |
                 project_name=reduxicle-${CIRCLE_JOB//test-/}
-                # project_name=reduxicle_$(cat package.json | jq -r .name | cut -d "/" -f 2)
-                # echo project_name gggg
                 echo "project name is $project_name"
                 TEST_PACKAGE=$project_name yarn test
         - run:
             name: Upload coverage
             command: |
                 project_name=reduxicle-${CIRCLE_JOB//test-/}
-                flag_name=$($project_name | tr '-' '_')
+                flag_name=$(echo $project_name | tr '-' '_')
                 echo $flag_name
                 # bash <(curl -s https://codecov.io/bash) -F reduxicle_$flag_name
 
