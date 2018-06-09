@@ -39,18 +39,16 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: dep-{{ .Branch }}-{{ checksum "package.json" }}
+          keys: 
+            - dep-v1-{{ checksum "yarn.lock" }}
+            - dep-v1-
       - run:
           name: Install dependencies
           command: yarn
       - save_cache:
-          key: dep-{{ .Branch }}-{{ checksum "package.json" }}
+          key: dep-v1-{{ checksum "yarn.lock" }}
           paths:
               - "node_modules"
-              - "packages/reduxicle-core/node_modules"
-              - "packages/reduxicle-dialog/node_modules"
-              - "packages/reduxicle-react-router/node_modules"
-              - "packages/reduxicle-redux-form/node_modules"
       - run:
           name: Determine which projects to build
           command: |
@@ -126,11 +124,16 @@ jobs:
           environment:
             NODE_ENV: production
           command: yarn build --non-core
-  test-core: <<: *test-package
-  test-dialog: <<: *test-package
-  test-react-router: <<: *test-package
-  test-redux-form: <<: *test-package
-  test-rest: <<: *test-package
+  test-core:
+    <<: *test-package
+  test-dialog:
+    <<: *test-package
+  test-react-router:
+    <<: *test-package
+  test-redux-form:
+    <<: *test-package
+  test-rest:
+    <<: *test-package
 workflows:
   version: 2
   workflow:
