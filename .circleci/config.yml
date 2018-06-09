@@ -209,3 +209,6 @@ workflows:
       - test-redux-form:
           requires:
             - build-core
+      - test-rest:
+          requires:
+            - build-core
