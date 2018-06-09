@@ -25,8 +25,8 @@ test-package: &test-package
                 project_name=reduxicle_${CIRCLE_JOB//test-/}
                 # project_name=reduxicle_$(cat package.json | jq -r .name | cut -d "/" -f 2)
                 # echo project_name gggg
-                echo "project name is $PROJECT_NAME"
-                TEST_PACKAGE=$PROJECT_NAME yarn test
+                echo "project name is $project_name"
+                TEST_PACKAGE=$project_name yarn test
         - run:
             name: Upload coverage
             command: |
