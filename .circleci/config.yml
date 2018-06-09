@@ -11,7 +11,8 @@ defaults: &defaults
     - image: circleci/node:8
 
 test-package: &test-package
-    <<: *defaults
+    docker:
+        - image: circleci/node:8
     parallelism: 1
     steps:
         - attach_workspace:
