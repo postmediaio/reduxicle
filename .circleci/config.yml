@@ -23,7 +23,7 @@ test-package: &test-package
             name: Run tests
             command: |
                 # project_name=reduxicle_$(cat package.json | jq -r .name | cut -d "/" -f 2)
-                # echo project_name g
+                # echo project_name gggg
                 echo "project name is $PROJECT_NAME"
                 TEST_PACKAGE=$PROJECT_NAME yarn test
         - run:
