@@ -10,6 +10,25 @@ defaults: &defaults
   docker:
     - image: circleci/node:8
 
+test-package: &test-package
+    <<: *defaults
+    parallelism: 1
+    steps:
+        - attach_workspace:
+            at: /tmp/workspace
+        - run:
+            name: Prepare to test
+            command: cp -R /tmp/workspace/. .
+        - run:
+            name: Run tests
+            command: yarn test
+        - run:
+            name: Upload coverage
+            command: |
+                flag_name=$(cat package.json | jq -r .name | cut -d "/" -f 2 | tr '-' '_')
+                echo reduxicle_$flag_name
+                # bash <(curl -s https://codecov.io/bash) -F reduxicle_$flag_name
+
 version: 2
 jobs:
   prepare:
@@ -164,6 +183,9 @@ jobs:
       - run:
           name: Upload coverage
           command: bash <(curl -s https://codecov.io/bash) -F reduxicle_redux_form
+  test-rest:
+    <<: *test-package
+    working_directory: ~/reduxicle/packages/reduxicle-rest
 workflows:
   version: 2
   workflow:
