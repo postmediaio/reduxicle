@@ -11,6 +11,7 @@ defaults: &defaults
     - image: circleci/node:8
 
 test-package: &test-package
+    working_directory: ~/reduxicle/packages/reduxicle-rest
     docker:
         - image: circleci/node:8
     parallelism: 1
@@ -185,7 +186,6 @@ jobs:
           name: Upload coverage
           command: bash <(curl -s https://codecov.io/bash) -F reduxicle_redux_form
   test-rest:
-    working_directory: ~/reduxicle/packages/reduxicle-rest
     <<: *test-package
 workflows:
   version: 2
