@@ -30,8 +30,7 @@ test-package: &test-package
             command: |
                 project_name=reduxicle-${CIRCLE_JOB//test-/}
                 flag_name=$(echo $project_name | tr '-' '_')
-                echo $flag_name
-                # bash <(curl -s https://codecov.io/bash) -F reduxicle_$flag_name
+                bash <(curl -s https://codecov.io/bash) -F $flag_name
 
 version: 2
 jobs:
@@ -128,71 +127,15 @@ jobs:
             NODE_ENV: production
           command: yarn build --non-core
   test-core:
-    <<: *defaults
-    parallelism: 1
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Prepare to test
-          command: cp -R /tmp/workspace/. .
-      - run:
-          name: Test
-          command: TEST_PACKAGE=reduxicle-core yarn test
-      - run:
-          name: Upload coverage
-          command: bash <(curl -s https://codecov.io/bash) -F reduxicle_core
-  test-dialog:
-    <<: *defaults
-    parallelism: 1
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Prepare to test
-          command: cp -R /tmp/workspace/. .
-      - run:
-          name: Test
-          command: TEST_PACKAGE=reduxicle-dialog yarn test
-      - run:
-          name: Upload coverage
-          command: bash <(curl -s https://codecov.io/bash) -F reduxicle_dialog
-  test-react-router:
-    <<: *defaults
-    parallelism: 1
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Prepare to test
-          command: cp -R /tmp/workspace/. .
-      - run:
-          name: Test
-          command: TEST_PACKAGE=reduxicle-react-router yarn test
-      - run:
-          name: Upload coverage
-          command: bash <(curl -s https://codecov.io/bash) -F reduxicle_react_router
-  test-redux-form:
-    <<: *defaults
-    parallelism: 1
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Prepare to test
-          command: cp -R /tmp/workspace/. .
-      - run:
-          name: Test
-          command: TEST_PACKAGE=reduxicle-redux-form yarn test
-      - run:
-          name: Upload coverage
-          command: bash <(curl -s https://codecov.io/bash) -F reduxicle_redux_form
-  test-rest:
-    enviroment:
-        PROJECT_NAME: reduxicle-rest
     <<: *test-package
-    enviroment:
-        PROJECT_NAME: reduxicle-rest
+  test-dialog:
+    <<: *test-package
+  test-react-router:
+    <<: *test-package
+  test-redux-form:
+    <<: *test-package
+  test-rest:
+    <<: *test-package
 workflows:
   version: 2
   workflow:
