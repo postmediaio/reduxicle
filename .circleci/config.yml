@@ -184,8 +184,8 @@ jobs:
           name: Upload coverage
           command: bash <(curl -s https://codecov.io/bash) -F reduxicle_redux_form
   test-rest:
-    <<: *test-package
     working_directory: ~/reduxicle/packages/reduxicle-rest
+    <<: *test-package
 workflows:
   version: 2
   workflow:
@@ -214,4 +214,3 @@ workflows:
             - build-core
 
 
-            
