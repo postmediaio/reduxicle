@@ -7,4 +7,4 @@ export { connect } from "react-redux";
 export { default as withInjectors, IWithInjectors } from "./withInjectors";
 export { default as createHOC } from "./createHOC";
 export { setIn, getIn } from "./utils";
-export { IReduxiclePlugin, IReduxicleConfigWithoutPlugins, IReduxicleConfig } from "./types";
+export { IReduxiclePlugin, IReduxicleConfigWithoutPlugins, IReduxicleConfig, IPluginContext } from "./types";

@@ -1,6 +1,6 @@
 import { applyMiddleware, compose, createStore as createReduxStore } from "redux";
 import { AnyAction } from "redux";
-import { Store, InjectedReducers, IReduxicleConfig } from "./types";
+import { Store, InjectedReducers, IReduxicleConfig, IPluginContext } from "./types";
 import createSagaMiddleware from "redux-saga";
 import { fromJS } from "immutable";
 import { combineReducers } from "./utils";
@@ -15,6 +15,7 @@ const createStore = (config: IReduxicleConfig = {}): Store => {
     sagaMiddleware,
   ];
 
+  const pluginContext: IPluginContext = {};
   plugins.forEach((plugin) => {
     /**
      * If the plugin has an initialize method, we want to call it
@@ -25,10 +26,10 @@ const createStore = (config: IReduxicleConfig = {}): Store => {
     if (plugin.initialize) {
       const configWithoutPlugins = { ...config };
       delete configWithoutPlugins.plugins;
-      
+
       plugin.initialize(configWithoutPlugins);
     }
-    
+
     middlewares = middlewares.concat(plugin.middlewares || []);
     if (plugin.key && plugin.reducer) {
       const numDots = (plugin.key.match(/\./g) || []).length;
@@ -37,6 +38,10 @@ const createStore = (config: IReduxicleConfig = {}): Store => {
       }
 
       injectedReducers[numDots][plugin.key] = plugin.reducer;
+    }
+
+    if (plugin.key && plugin.context) {
+      pluginContext[plugin.key] = plugin.context;
     }
   });
   const enhancers = [
@@ -66,8 +71,9 @@ const createStore = (config: IReduxicleConfig = {}): Store => {
     injectedSagas: {},
     runSaga: sagaMiddleware.run,
     config,
-  }
-  
+    pluginContext,
+  };
+
   return store;
 };
 

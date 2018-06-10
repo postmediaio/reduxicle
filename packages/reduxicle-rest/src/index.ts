@@ -1,0 +1,1 @@
+export { RestPlugin } from "./plugin";

@@ -1,11 +1,16 @@
 import { AnyAction, Store as ReduxStore } from "redux";
 import { Task } from "redux-saga";
 
+export interface IPluginContext {
+  [key: string]: any;
+}
+
 export interface IReduxiclePlugin {
   key: string;
   middlewares?: any[];
   reducer?: AnyReducer;
   wrapper?: any;
+  context?: IPluginContext;
   initialize?: (reduxicleConfig: IReduxicleConfigWithoutPlugins) => void;
 }
 
@@ -22,7 +27,10 @@ export interface IReduxicleContext {
   runSaga: (saga: AnyFunction) => Task;
   injectedReducers: InjectedReducers;
   injectedSagas: {
-    [key: string]: InjectedSagaDescriptor|"done";
+    [sagaKey: string]: InjectedSagaDescriptor|"done";
+  };
+  pluginContext: {
+    [pluginName: string]: IPluginContext;
   };
 }
 
@@ -44,6 +52,8 @@ export type AnyFunction = (...params: any[]) => any;
 export type Store = ReduxStore & {
   reduxicle: IReduxicleContext,
 };
+
+export type AnyGenerator = Iterator<any>;
 
 export type AnyReducer = (state: AnyObject, action: AnyAction) => AnyObject;
 

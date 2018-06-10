@@ -10,6 +10,28 @@ defaults: &defaults
   docker:
     - image: circleci/node:8
 
+test-package: &test-package
+    <<: *defaults
+    parallelism: 1
+    steps:
+        - attach_workspace:
+            at: /tmp/workspace
+        - run:
+            name: Prepare to test
+            command: cp -R /tmp/workspace/. .
+        - run:
+            name: Run tests
+            command: |
+                project_name=reduxicle-${CIRCLE_JOB//test-/}
+                echo "project name is $project_name"
+                TEST_PACKAGE=$project_name yarn test
+        - run:
+            name: Upload coverage
+            command: |
+                project_name=reduxicle-${CIRCLE_JOB//test-/}
+                flag_name=$(echo $project_name | tr '-' '_')
+                bash <(curl -s https://codecov.io/bash) -F $flag_name
+
 version: 2
 jobs:
   prepare:
@@ -17,28 +39,55 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: dep-{{ .Branch }}-{{ checksum "package.json" }}
+          keys: 
+            - dep-v1-{{ checksum "yarn.lock" }}
+            - dep-v1-
       - run:
           name: Install dependencies
           command: yarn
       - save_cache:
-          key: dep-{{ .Branch }}-{{ checksum "package.json" }}
+          key: dep-v1-{{ checksum "yarn.lock" }}
           paths:
               - "node_modules"
-              - "packages/reduxicle-core/node_modules"
-              - "packages/reduxicle-dialog/node_modules"
-              - "packages/reduxicle-react-router/node_modules"
-              - "packages/reduxicle-redux-form/node_modules"
       - run:
-          name: Check Changes
+          name: Determine which projects to build
           command: |
-            lastest_commit_to_dest_branch="$(git ls-remote git://github.com/postmediaio/reduxicle.git refs/heads/master | cut -f 1)"
-            # latest_commit_to_pr="$(git log -n 1 --pretty=format:"%H")"
-            # echo "Comparing $lastest_commit_to_dest_branch to $latest_commit_to_pr"
-            for folder in `git log --format="" --name-only $lastest_commit_to_dest_branch^.. | cut -d"/" -f2 | sort -u`; do
-                echo "contents in $folder were modified"
-                #this would be a call to specific testing, etc on changed directory
-            done
+            username=postmediaio
+            project=reduxicle
+            should_build_everything=1
+            is_pr_from_fork=0
+            dest_branch=master
+
+            if [[ -n $CIRCLE_PR_USERNAME && $CIRCLE_PROJECT_USERNAME != $CIRCLE_PR_USERNAME && $CIRCLE_PROJECT_USERNAME = $username ]]; then
+                echo "Detected this is a PR from a fork"
+                is_pr_from_fork=1
+            else
+                echo "Detected this is not a PR from a fork"
+            fi
+
+            if [[ $is_pr_from_fork = 1 ]]; then
+                dest_branch=$(curl -s https://api.github.com/repos/$username/$project/pulls/$CIRCLE_PR_NUMBER | jq -r '.head.ref')
+                should_build_everything=0
+            elif [[ $CIRCLE_BRANCH != "master" ]]; then
+                dest_branch=$CIRCLE_BRANCH
+                should_build_everything=0
+            fi
+            echo "Detected dest_branch is $dest_branch"
+            
+            if [[ $should_build_everything = 0 ]]; then
+                echo "Decided to only build packages which have changed"
+                lastest_commit_to_dest_branch="$(git ls-remote git://github.com/$username/$project.git refs/heads/$dest_branch | cut -f 1)"
+                for folder in $(git log --format="" --name-only $lastest_commit_to_dest_branch^.. | cut -d"/" -f2 | sort -u); do
+                    echo "bla is $folder"
+                    if [[ -d "./packages/$foler" ]]; then
+                        echo "Detected $folder package was modified"
+                        echo $folder >> ./.circleci/projects-to-build.txt
+                    fi
+                done
+            else
+                echo "Decided to build everything"
+                echo "Should build everything" >> ./.circleci/should-build-everything.txt
+            fi
       - persist_to_workspace:
           root: .
           paths:
@@ -76,65 +125,15 @@ jobs:
             NODE_ENV: production
           command: yarn build --non-core
   test-core:
-    <<: *defaults
-    parallelism: 1
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Prepare to test
-          command: cp -R /tmp/workspace/. .
-      - run:
-          name: Test
-          command: TEST_PACKAGE=reduxicle-core yarn test
-      - run:
-          name: Upload coverage
-          command: bash <(curl -s https://codecov.io/bash) -F reduxicle_core
+    <<: *test-package
   test-dialog:
-    <<: *defaults
-    parallelism: 1
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Prepare to test
-          command: cp -R /tmp/workspace/. .
-      - run:
-          name: Test
-          command: TEST_PACKAGE=reduxicle-dialog yarn test
-      - run:
-          name: Upload coverage
-          command: bash <(curl -s https://codecov.io/bash) -F reduxicle_dialog
+    <<: *test-package
   test-react-router:
-    <<: *defaults
-    parallelism: 1
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Prepare to test
-          command: cp -R /tmp/workspace/. .
-      - run:
-          name: Test
-          command: TEST_PACKAGE=reduxicle-react-router yarn test
-      - run:
-          name: Upload coverage
-          command: bash <(curl -s https://codecov.io/bash) -F reduxicle_react_router
+    <<: *test-package
   test-redux-form:
-    <<: *defaults
-    parallelism: 1
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Prepare to test
-          command: cp -R /tmp/workspace/. .
-      - run:
-          name: Test
-          command: TEST_PACKAGE=reduxicle-redux-form yarn test
-      - run:
-          name: Upload coverage
-          command: bash <(curl -s https://codecov.io/bash) -F reduxicle_redux_form
+    <<: *test-package
+  test-rest:
+    <<: *test-package
 workflows:
   version: 2
   workflow:
@@ -158,3 +157,8 @@ workflows:
       - test-redux-form:
           requires:
             - build-core
+      - test-rest:
+          requires:
+            - build-core
+
+
