@@ -53,6 +53,8 @@ export type Store = ReduxStore & {
   reduxicle: IReduxicleContext,
 };
 
+export type AnyGenerator = Iterator<any>;
+
 export type AnyReducer = (state: AnyObject, action: AnyAction) => AnyObject;
 
 export enum SagaInjectionModes {

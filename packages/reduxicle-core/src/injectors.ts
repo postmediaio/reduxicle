@@ -37,7 +37,7 @@ export const injectReducer = ({ key, reducer }: IInjectReducer, store: Store) =>
 export interface IInjectSaga {
   key: string;
   saga: AnyFunction;
-  mode: SagaInjectionModes;
+  mode?: SagaInjectionModes;
 }
 
 export const injectSaga = ({ key, saga, mode = SagaInjectionModes.RESTART_ON_REMOUNT }: IInjectSaga, store: Store) => {

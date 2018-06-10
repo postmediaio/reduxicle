@@ -50,7 +50,7 @@ export function getIn(obj: AnyObject, keyPath: string[]) {
 export function setIn(obj: AnyObject, keyPath: string[], newValue: any) {
   const isImmutable = Boolean(obj.toJS);
   if (isImmutable) {
-    return obj.setIn(keyPath, newValue);
+    return obj.setIn(keyPath, fromJS(newValue));
   }
 
   const newObj = { ...obj };

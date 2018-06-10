@@ -12,7 +12,12 @@
   },
   "devDependencies": {
     "@types/node": "9",
+    "@types/redux": "^3.6.0",
+    "@types/redux-saga": "^0.10.5",
     "@types/sinon": "^5.0.1",
     "sinon": "^5.1.1"
+  },
+  "dependencies": {
+    "redux-saga": "^0.16.0"
   }
 }
