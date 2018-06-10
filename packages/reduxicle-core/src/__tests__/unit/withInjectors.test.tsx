@@ -19,6 +19,7 @@ describe("withInjectors", () => {
       injectSaga: expect.any(Function),
       ejectSaga: expect.any(Function),
       config: {},
+      pluginContext: expect.any(Object),
     });
   });
 });
