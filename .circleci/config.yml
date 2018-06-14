@@ -274,7 +274,7 @@ workflows:
             filters:
                 branches:
                     only:
-                        - dev
+                        - master
             requires:
                 - build-core
                 - build-non-core
