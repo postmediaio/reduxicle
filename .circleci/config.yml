@@ -201,7 +201,7 @@ jobs:
             command: |
                 if [[ $CIRCLE_PROJECT_USERNAME == "postmediaio" && -z $CIRCLE_PR_USERNAME ]]; then
                     find packages/reduxicle-* -prune -type d | while read d; do
-                        cd ~/reduxicle/packages/$d
+                        cd ~/reduxicle/$d
                         echo "access=public" >> .npmrc
                         echo "scope=@reduxicle" >> .npmrc
                         echo "registry=https://registry.npmjs.com" >> .npmrc
