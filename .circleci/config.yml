@@ -46,10 +46,26 @@ job-templates:
                 name: Deploy
                 command: |
                     if [[ $CIRCLE_PROJECT_USERNAME == "postmediaio" && -z $CIRCLE_PR_USERNAME ]]; then
-                        project_name=reduxicle-${CIRCLE_JOB//rc-deploy-/}
+                        folder_name=${CIRCLE_JOB//rc-deploy-/}
+                        project_name=reduxicle-$folder_name
+                        echo "folder name is $folder_name"
                         echo "project name is $project_name"
+
                         cd packages/$project_name
                         echo "//registry.npmjs.com/:_authToken=$NPM_PUBLIC_REGISTRY_PUBLISH_TOKEN" >> .npmrc
+                        
+                        latest_version=$(npm view @reduxicle/$folder_name version || echo "0.0.0")
+                        if [[ $latest_version == "0.0.0" ]]; then
+                            echo "Package wasn't found in the npm registry, but that's ok, publishing anyway..."
+                        fi
+
+                        latest_major=$(echo "$latest_version" | cut -d "." -f1)
+                        latest_minor=$(echo "$latest_version" | cut -d "." -f2)
+                        latest_minor_increased=$(($latest_minor+1))
+
+                        next_version="$latest_major.$latest_minor_increased.0-rc.$CIRCLE_BUILD_NUM"
+
+                        echo "next rc version will be $next_version"
                     else
                         echo "Skipping deploy because this is a fork build..."
                     fi
