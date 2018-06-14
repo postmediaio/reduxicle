@@ -4,7 +4,6 @@
   "main": "index.js",
   "author": "Ben Lorantfy <ben@postmedia.io>",
   "license": "MIT",
-  "private": false,
   "scripts": {
     "test": "cd ../../ && TEST_PACKAGE=reduxicle-rest yarn test",
     "build": "gulp build --package=reduxicle-rest",

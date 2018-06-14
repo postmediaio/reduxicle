@@ -1,6 +1,6 @@
 {
   "name": "reduxicle",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Reduxicle is a collection of factories and HOCs to add a layer of abstraction on top of redux",
   "main": "index.js",
   "author": "Ben Lorantfy <ben@postmedia.io>",
@@ -10,7 +10,8 @@
     "build": "gulp build",
     "build:watch": "gulp build:watch",
     "test": "NODE_ENV=test jest --coverage",
-    "test:watch": "NODE_ENV=test jest --watchAll --coverage"
+    "test:watch": "NODE_ENV=test jest --watchAll --coverage",
+    "bump": "sh ./scripts/bump-version.sh"
   },
   "workspaces": [
     "packages/*"
