@@ -10,27 +10,50 @@ defaults: &defaults
   docker:
     - image: circleci/node:8
 
-test-package: &test-package
-    <<: *defaults
-    parallelism: 1
-    steps:
-        - attach_workspace:
-            at: /tmp/workspace
-        - run:
-            name: Prepare to test
-            command: cp -R /tmp/workspace/. .
-        - run:
-            name: Run tests
-            command: |
-                project_name=reduxicle-${CIRCLE_JOB//test-/}
-                echo "project name is $project_name"
-                TEST_PACKAGE=$project_name yarn test
-        - run:
-            name: Upload coverage
-            command: |
-                project_name=reduxicle-${CIRCLE_JOB//test-/}
-                flag_name=$(echo $project_name | tr '-' '_')
-                bash <(curl -s https://codecov.io/bash) -F $flag_name
+job-templates:
+    test-package: &test-package
+        <<: *defaults
+        parallelism: 1
+        steps:
+            - attach_workspace:
+                at: /tmp/workspace
+            - run:
+                name: Prepare to test
+                command: cp -R /tmp/workspace/. .
+            - run:
+                name: Run tests
+                command: |
+                    project_name=reduxicle-${CIRCLE_JOB//test-/}
+                    echo "project name is $project_name"
+                    TEST_PACKAGE=$project_name yarn test
+            - run:
+                name: Upload coverage
+                command: |
+                    project_name=reduxicle-${CIRCLE_JOB//test-/}
+                    flag_name=$(echo $project_name | tr '-' '_')
+                    bash <(curl -s https://codecov.io/bash) -F $flag_name
+
+    rc-deploy: &rc-deploy
+        <<: *defaults
+        parallelism: 1
+        steps:
+            - attach_workspace:
+                at: /tmp/workspace
+            - run:
+                name: Prepare to test
+                command: cp -R /tmp/workspace/. .
+            - run:
+                name: Deploy
+                command: |
+                    if [[ $CIRCLE_PROJECT_USERNAME == "postmediaio" && -z $CIRCLE_PR_USERNAME ]]; then
+                        project_name=reduxicle-${CIRCLE_JOB//rc-deploy-/}
+                        echo "project name is $project_name"
+                        cd packages/$project_name
+                        echo "//registry.npmjs.com/:_authToken=$NPM_PUBLIC_REGISTRY_PUBLISH_TOKEN" >> .npmrc
+                    else
+                        echo "Skipping deploy because this is a fork build..."
+                    fi
+
 
 version: 2
 jobs:
@@ -134,6 +157,16 @@ jobs:
     <<: *test-package
   test-rest:
     <<: *test-package
+  rc-deploy-core:
+    <<: *rc-deploy
+  rc-deploy-dialog:
+    <<: *rc-deploy
+  rc-deploy-react-router:
+    <<: *rc-deploy
+  rc-deploy-redux-form:
+    <<: *rc-deploy
+  rc-deploy-rest:
+    <<: *rc-deploy
 workflows:
   version: 2
   workflow:
@@ -160,5 +193,45 @@ workflows:
       - test-rest:
           requires:
             - build-core
-
+      - rc-deploy-core:
+          filters:
+            branches:
+              only:
+                - dev
+          requires:
+            - build-core
+            - test-core
+      - rc-deploy-dialog:
+          filters:
+            branches:
+              only:
+                - dev
+          requires:
+            - build-non-core
+            - test-dialog
+      - rc-deploy-react-router:
+          filters:
+            branches:
+              only:
+                - dev
+          requires:
+            - build-non-core
+            - test-react-router
+      - rc-deploy-redux-form:
+          filters:
+            branches:
+              only:
+                - dev
+          requires:
+            - build-non-core
+            - test-redux-form
+      - rc-deploy-rest:
+          filters:
+            branches:
+              only:
+                - dev
+          requires:
+            - build-non-core
+            - test-rest
+      
 
