@@ -52,6 +52,9 @@ job-templates:
                         echo "project name is $project_name"
 
                         cd packages/$project_name
+                        echo "access=public" >> .npmrc
+                        echo "scope=@reduxicle" >> .npmrc
+                        echo "registry=https://registry.npmjs.com" >> .npmrc
                         echo "//registry.npmjs.com/:_authToken=$NPM_PUBLIC_REGISTRY_PUBLISH_TOKEN" >> .npmrc
                         
                         latest_version=$(npm view @reduxicle/$folder_name version || echo "0.0.0")
