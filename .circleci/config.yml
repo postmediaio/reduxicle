@@ -191,6 +191,11 @@ jobs:
   deploy:
     <<: *defaults
     steps:
+        - attach_workspace:
+            at: /tmp/workspace
+        - run:
+            name: Prepare to deploy
+            command: cp -R /tmp/workspace/. .
         - run:
             name: Deploy
             command: |
