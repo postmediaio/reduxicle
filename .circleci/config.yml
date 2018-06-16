@@ -168,6 +168,10 @@ jobs:
           environment:
             NODE_ENV: production
           command: yarn build --non-core
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
   test-core:
     <<: *test-package
   test-dialog:

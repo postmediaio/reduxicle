@@ -9,6 +9,13 @@
     "build": "gulp build --package=reduxicle-rest",
     "build:watch": "gulp build:watch --package=reduxicle-rest"
   },
+  "files": [
+    "lib",
+    "index.d.ts",
+    "index.js",
+    "internals.js",
+    "README.md"
+  ],
   "devDependencies": {
     "@types/node": "9",
     "@types/redux": "^3.6.0",

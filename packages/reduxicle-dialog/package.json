@@ -5,6 +5,13 @@
   "main": "index.js",
   "author": "Ben Lorantfy <ben@postmedia.io>",
   "license": "MIT",
+  "files": [
+    "lib",
+    "index.d.ts",
+    "index.js",
+    "internals.js",
+    "README.md"
+  ],
   "dependencies": {
     "@reduxicle/core": "x.x.x",
     "hoist-non-react-statics": "^2.5.0"
