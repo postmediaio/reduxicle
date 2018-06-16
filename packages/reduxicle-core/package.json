@@ -14,6 +14,7 @@
     "lib",
     "index.d.ts",
     "index.js",
+    "internals.d.ts",
     "internals.js",
     "README.md"
   ],
