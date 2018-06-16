@@ -9,6 +9,13 @@
     "build": "gulp build --package=reduxicle-react-router",
     "build:watch": "gulp build:watch --package=reduxicle-react-router"
   },
+  "files": [
+    "lib",
+    "index.d.ts",
+    "index.js",
+    "internals.js",
+    "README.md"
+  ],
   "devDependencies": {
     "@types/history": "^4.6.2",
     "@types/react": "^16.3.13",

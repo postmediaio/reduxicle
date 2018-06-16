@@ -9,6 +9,13 @@
     "build": "gulp build --package=reduxicle-redux-form",
     "build:watch": "gulp build:watch --package=reduxicle-redux-form"
   },
+  "files": [
+    "lib",
+    "index.d.ts",
+    "index.js",
+    "internals.js",
+    "README.md"
+  ],
   "devDependencies": {
     "@types/react": "^16.3.13",
     "@types/redux-form": "^7.2.4",
