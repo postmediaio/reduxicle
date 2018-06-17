@@ -1,0 +1,26 @@
+{
+  "name": "@reduxicle/select",
+  "version": "0.1.0",
+  "main": "index.js",
+  "author": "Ben Lorantfy <ben@postmedia.io>",
+  "license": "MIT",
+  "scripts": {
+    "test": "cd ../../ && TEST_PACKAGE=reduxicle-select yarn test",
+    "build": "gulp build --package=reduxicle-select",
+    "build:watch": "gulp build:watch --package=reduxicle-select"
+  },
+  "files": [
+    "lib",
+    "index.d.ts",
+    "index.js",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@types/node": "9",
+    "@types/sinon": "^5.0.1",
+    "sinon": "^5.1.1"
+  },
+  "dependencies": {
+    "@reduxicle/core": "x.x.x"
+  }
+}

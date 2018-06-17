@@ -6,7 +6,7 @@
   "author": "Ben Lorantfy <ben@postmedia.io>",
   "license": "MIT",
   "files": [
-    "lib",
+   "lib",
     "index.d.ts",
     "index.js",
     "internals.js",

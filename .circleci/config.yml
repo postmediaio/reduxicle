@@ -182,6 +182,8 @@ jobs:
     <<: *test-package
   test-rest:
     <<: *test-package
+  test-select:
+    <<: *test-package
   rc-deploy-core:
     <<: *rc-deploy
   rc-deploy-dialog:
@@ -191,6 +193,8 @@ jobs:
   rc-deploy-redux-form:
     <<: *rc-deploy
   rc-deploy-rest:
+    <<: *rc-deploy
+  rc-deploy-select:
     <<: *rc-deploy
   deploy:
     <<: *defaults
@@ -239,6 +243,9 @@ workflows:
       - test-rest:
           requires:
             - build-core
+      - test-select:
+          requires:
+            - build-core
       - rc-deploy-core:
           filters:
             branches:
@@ -279,6 +286,14 @@ workflows:
           requires:
             - build-non-core
             - test-rest
+      - rc-deploy-select:
+          filters:
+            branches:
+              only:
+                - dev
+          requires:
+            - build-non-core
+            - test-select
       - deploy:
             filters:
                 branches:
@@ -292,3 +307,4 @@ workflows:
                 - test-react-router
                 - test-redux-form
                 - test-rest
+                - test-select

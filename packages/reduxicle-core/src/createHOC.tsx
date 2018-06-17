@@ -52,7 +52,7 @@ export const createInitialState = (state: any, options: ICreateInitialStateOptio
 export interface ICreateHOC {
   createNames: () => IPattern;
   createKey: (parentKey: string, names: INames) => string;
-  createInitialState: () => AnyObject|AnyGenerator;
+  createInitialState: () => AnyObject|AnyGenerator|null;
   createReducer?: (inititalState: AnyObject, options: { prefix: string }) => AnyReducer;
   createSaga?: (userOptions: AnyObject, options: { prefix: string, pluginContext?: IReduxicleContext["pluginContext"] }) => AnyFunction;
   mapStateToProps: (state: AnyObject, options: { names: INames }) => AnyObject;
