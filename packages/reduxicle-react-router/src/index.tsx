@@ -12,11 +12,7 @@ import {
   ConnectedRouter as ImmutableConnectedRouter,
   routerMiddleware as immutableRouterMiddleware,
   connectRouter  as immutableConnectRouter,
-
-// There is no type definitions for /immutable :(
-// Maybe we can submit a PR to add them? Shouldn't be too hard
-} from "connected-react-router/immutable"; 
-
+} from "connected-react-router/immutable";
 
 export class ReactRouterPlugin implements IReduxiclePlugin {
   public key: string;
