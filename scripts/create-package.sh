@@ -36,7 +36,6 @@ package_file="{\n
 index_file="module.exports = require('./lib/index.js');"
 src_index_file="export const answer: number = 42;"
 
-
 echo $package_file >> package.json
 echo $index_file >> index.js
 mkdir src

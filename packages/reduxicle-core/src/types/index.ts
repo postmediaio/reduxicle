@@ -5,10 +5,13 @@ export interface IPluginContext {
   [key: string]: any;
 }
 
+export type ReducerWrapper = (reducerToWrap: AnyReducer) => AnyReducer;
+
 export interface IReduxiclePlugin {
   key: string;
   middlewares?: any[];
   reducer?: AnyReducer;
+  reducerWrapper?: ReducerWrapper;
   wrapper?: any;
   context?: IPluginContext;
   initialize?: (reduxicleConfig: IReduxicleConfigWithoutPlugins) => void;

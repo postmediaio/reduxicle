@@ -1,20 +1,41 @@
 import * as React from "react";
 import { IReduxiclePlugin, IReduxicleConfigWithoutPlugins } from "@reduxicle/core/internals";
-import createHistory from "history/createBrowserHistory";
-import { ConnectedRouter, routerReducer, routerMiddleware } from "react-router-redux";
-const history = createHistory();
+import { createBrowserHistory, History } from "history";
+
+import {
+  connectRouter,
+  routerMiddleware,
+  ConnectedRouter,
+} from "connected-react-router";
+
+import {
+  ConnectedRouter as ImmutableConnectedRouter,
+  routerMiddleware as immutableRouterMiddleware,
+  connectRouter  as immutableConnectRouter,
+} from "connected-react-router/immutable";
 
 export class ReactRouterPlugin implements IReduxiclePlugin {
   public key: string;
-  public middlewares: any[];
+  public middlewares: any[] = [];
   public reducer: any;
   public wrapper: any;
+  public reducerWrapper: any;
+  private history: History;
 
   constructor() {
-    const middleware = routerMiddleware(history);
     this.key = "router";
-    this.middlewares = [middleware];
-    this.reducer = routerReducer;
-    this.wrapper = <ConnectedRouter history={history} />;
+    this.history = createBrowserHistory();
+  }
+
+  public initialize(config: IReduxicleConfigWithoutPlugins) {
+    if (config.useImmutableJS) {
+      this.middlewares = [immutableRouterMiddleware];
+      this.wrapper = <ImmutableConnectedRouter history={this.history} />;
+      this.reducerWrapper = immutableConnectRouter(this.history);
+    } else {
+      this.middlewares = [routerMiddleware];
+      this.wrapper = <ConnectedRouter history={this.history} />;
+      this.reducerWrapper = connectRouter(this.history);
+    }
   }
 }
