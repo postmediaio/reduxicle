@@ -27,11 +27,9 @@ export const injectReducer = ({ key, reducer }: IInjectReducer, store: Store) =>
     store.reduxicle.injectedReducers[numDots] = {};
   }
 
-  console.log('injectReducer', key);
   store.reduxicle.injectedReducers[numDots][key] = reducer;
   store.replaceReducer(combineReducers(store.reduxicle.injectedReducers, store.reduxicle.reducerWrappers));
 
-  console.log('dispatcher', store.dispatch);
   // Need to dispatch an action so that the reducers re-trigger
   store.dispatch({ type: "@@reduxicle/inject-reducer", key });
 };
