@@ -7,7 +7,7 @@ const hoistNonReactStatics = require("hoist-non-react-statics"); // tslint:disab
 export type WithReducerOptions = { key: string, reducer: AnyReducer } | AnyReducer;
 
 const withReducer = (options: WithReducerOptions) => {
-  return (UnwrappedComponent: React.ComponentClass & { key: string }) => {
+  return (UnwrappedComponent: React.ComponentClass & { key: string }): React.ComponentClass => {
     const resolvedOptions = {
       key: typeof options === "function" ? UnwrappedComponent.key : (options.key || UnwrappedComponent.key),
       reducer: typeof options === "function" ? options : options.reducer,

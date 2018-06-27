@@ -29,11 +29,11 @@ export class ReactRouterPlugin implements IReduxiclePlugin {
 
   public initialize(config: IReduxicleConfigWithoutPlugins) {
     if (config.useImmutableJS) {
-      this.middlewares = [immutableRouterMiddleware];
+      this.middlewares = [immutableRouterMiddleware(this.history)];
       this.wrapper = <ImmutableConnectedRouter history={this.history} />;
       this.reducerWrapper = immutableConnectRouter(this.history);
     } else {
-      this.middlewares = [routerMiddleware];
+      this.middlewares = [routerMiddleware(this.history)];
       this.wrapper = <ConnectedRouter history={this.history} />;
       this.reducerWrapper = connectRouter(this.history);
     }

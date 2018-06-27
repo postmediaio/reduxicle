@@ -3,10 +3,10 @@ import * as React from "react";
 import { StoreProvider } from "@reduxicle/core";
 import ExampleWithDialog from "./ExampleWithDialog";
 import ExampleWithReducer from "./ExampleWithReducer";
-import ExampleWithForm from "./ExampleWithForm";
 import { ReactRouterPlugin } from "@reduxicle/react-router";
 
 const config = {
+  useImmutableJS: true,
   plugins: [
     new ReactRouterPlugin(),
   ],
@@ -15,10 +15,9 @@ const config = {
 class App extends React.Component {
   public render() {
     return (
-      <StoreProvider useImmutableJS config={config}>
+      <StoreProvider config={config}>
         <ExampleWithDialog />
         <ExampleWithReducer />
-        <ExampleWithForm />
       </StoreProvider>
     );
   }

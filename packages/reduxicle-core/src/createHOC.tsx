@@ -61,7 +61,7 @@ export interface ICreateHOC {
 
 const createHOC = (createHOCOptions: ICreateHOC) => {
   return (userOptions: AnyObject) => {
-    return (UnwrappedComponent: React.ComponentType & { key?: string }) => {
+    return (UnwrappedComponent: React.ComponentType & { key?: string }): React.ComponentClass => {
       const pattern = createHOCOptions.createNames();
       const names = generateNamesFromPattern(pattern, userOptions);
       const parentKey = userOptions.key || UnwrappedComponent.key || "";
@@ -87,7 +87,11 @@ const createHOC = (createHOCOptions: ICreateHOC) => {
           }
 
           if (createHOCOptions.createSaga) {
-            const saga = createHOCOptions.createSaga(userOptions, { prefix, pluginContext: this.props.reduxicle.pluginContext });
+            const saga = createHOCOptions.createSaga(
+              userOptions,
+              { prefix, pluginContext: this.props.reduxicle.pluginContext }
+            );
+
             this.props.reduxicle.injectSaga({
               key,
               saga,

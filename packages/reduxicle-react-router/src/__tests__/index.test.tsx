@@ -20,7 +20,7 @@ describe("ReactRouterPlugin", () => {
 
     return wrapper;
   };
-  
+
   it("should inject the route reducer", () => {
     const wrapper = render({
       plugins: [

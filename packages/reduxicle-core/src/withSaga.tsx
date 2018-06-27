@@ -7,7 +7,7 @@ const hoistNonReactStatics = require("hoist-non-react-statics"); // tslint:disab
 export type WithSagaOptions = { key: string, saga: AnyFunction, mode?: SagaInjectionModes } | AnyFunction;
 
 const withSaga = (options: WithSagaOptions) => {
-  return (UnwrappedComponent: React.ComponentClass & { key?: string }) => {
+  return (UnwrappedComponent: React.ComponentClass & { key?: string }): React.ComponentClass => {
     const resolvedOptions = {
       key: typeof options === "function" ? UnwrappedComponent.key : (options.key || UnwrappedComponent.key),
       saga: typeof options === "function" ? options : options.saga,

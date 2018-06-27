@@ -53,8 +53,7 @@ const createStore = (config: IReduxicleConfig = {}): Store => {
     applyMiddleware(...middlewares),
   ];
 
-  const unwrappedRootReducer = combineReducers(injectedReducers);
-  const rootReducer = compose<AnyReducer>(...reducerWrappers)(unwrappedRootReducer);
+  const rootReducer = combineReducers(injectedReducers, reducerWrappers);
 
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose
   const composeEnhancers =
@@ -78,6 +77,7 @@ const createStore = (config: IReduxicleConfig = {}): Store => {
   ) as Store;
 
   store.reduxicle = {
+    reducerWrappers,
     injectedReducers,
     injectedSagas: {},
     runSaga: sagaMiddleware.run,
