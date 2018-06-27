@@ -55,8 +55,11 @@ job-templates:
                         # This is because x.x.x gets the latest version, but we want the rc version
                         # See: https://semver.npmjs.com/
                         reduxicle_core_version=$(cat package.json | jq '.dependencies["@reduxicle/core"]')
+                        echo "reduxicle_core_version is $reduxicle_core_version"
                         if [[ -n $reduxicle_core_version && $reduxicle_core_version != "null" ]]; then
-                            cat package.json | jq '.dependencies["@reduxicle/core"] = "rc"'
+                            echo "Replacing reduxicle core version with 'rc'"
+                            new_package=$(cat package.json | jq '.dependencies["@reduxicle/core"] = "rc"')
+                            echo $new_package > package.json
                         fi
 
                         cd packages/$project_name
