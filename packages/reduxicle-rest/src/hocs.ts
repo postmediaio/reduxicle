@@ -52,13 +52,17 @@ export const withLoadItems = createHOC({
   },
   createSaga: (userOptions, { prefix, pluginContext }) => {
     return function*() {
-      yield takeLatest(`${prefix}/LOAD_ITEMS`, function*() {
+      yield takeLatest(`${prefix}/LOAD_ITEMS`, function*(action) {
         if (!pluginContext || !pluginContext.rest) {
-          return yield put({ type: `${prefix}/LOAD_ITEMS_FAILED`, error: "Missing plugin configuration for RestPlugin" });
+          return yield put({
+            type: `${prefix}/LOAD_ITEMS_FAILED`,
+            error: "Missing plugin configuration for RestPlugin",
+          });
         }
 
         try {
-          const data = yield call(pluginContext.rest.requestService.request, "GET", userOptions.url);
+          const { type, ...body } = action;
+          const data = yield call(pluginContext.rest.requestService.request, "GET", userOptions.url, body);
           yield put({ type: `${prefix}/LOAD_ITEMS_SUCCEEDED`, data });
         } catch (error) {
           yield put({ type: `${prefix}/LOAD_ITEMS_FAILED`, error: error.toString() });
@@ -72,6 +76,6 @@ export const withLoadItems = createHOC({
     [names.loadItemsError]: getIn(state, ["error"]),
   }),
   mapDispatchToProps: (dispatch: Dispatch<any>, { names, prefix }: { names: any, prefix: string}) => ({
-    [names.loadItems]: () => dispatch({ type: `${prefix}/LOAD_ITEMS` }),
+    [names.loadItems]: (args: {}) => dispatch({ type: `${prefix}/LOAD_ITEMS`, ...args }),
   }),
 });
