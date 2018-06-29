@@ -50,8 +50,19 @@ job-templates:
                         project_name=reduxicle-$folder_name
                         echo "folder name is $folder_name"
                         echo "project name is $project_name"
-
                         cd packages/$project_name
+
+                        # We need to replace the core dependency with "rc"
+                        # This is because x.x.x gets the latest version, but we want the rc version
+                        # See: https://semver.npmjs.com/
+                        reduxicle_core_version=$(cat package.json | jq '.dependencies["@reduxicle/core"]')
+                        echo "reduxicle_core_version is $reduxicle_core_version"
+                        if [[ -n $reduxicle_core_version && $reduxicle_core_version != "null" ]]; then
+                            echo "Replacing reduxicle core version with 'rc'"
+                            new_package=$(cat package.json | jq '.dependencies["@reduxicle/core"] = "rc"')
+                            echo $new_package > package.json
+                        fi
+
                         echo "access=public" >> .npmrc
                         echo "scope=@reduxicle" >> .npmrc
                         echo "registry=https://registry.npmjs.com" >> .npmrc
@@ -168,6 +179,10 @@ jobs:
           environment:
             NODE_ENV: production
           command: yarn build --non-core
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
   test-core:
     <<: *test-package
   test-dialog:
@@ -178,6 +193,8 @@ jobs:
     <<: *test-package
   test-rest:
     <<: *test-package
+  test-select:
+    <<: *test-package
   rc-deploy-core:
     <<: *rc-deploy
   rc-deploy-dialog:
@@ -187,6 +204,8 @@ jobs:
   rc-deploy-redux-form:
     <<: *rc-deploy
   rc-deploy-rest:
+    <<: *rc-deploy
+  rc-deploy-select:
     <<: *rc-deploy
   deploy:
     <<: *defaults
@@ -235,6 +254,9 @@ workflows:
       - test-rest:
           requires:
             - build-core
+      - test-select:
+          requires:
+            - build-core
       - rc-deploy-core:
           filters:
             branches:
@@ -275,6 +297,14 @@ workflows:
           requires:
             - build-non-core
             - test-rest
+      - rc-deploy-select:
+          filters:
+            branches:
+              only:
+                - dev
+          requires:
+            - build-non-core
+            - test-select
       - deploy:
             filters:
                 branches:
@@ -288,3 +318,4 @@ workflows:
                 - test-react-router
                 - test-redux-form
                 - test-rest
+                - test-select

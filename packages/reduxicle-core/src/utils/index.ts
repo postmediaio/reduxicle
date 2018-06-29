@@ -1,7 +1,7 @@
 import * as React from "react";
 import { camelCase } from "change-case";
 import { AnyAction, Dispatch, compose } from "redux";
-import { InjectedReducers, AnyReducer, AnyObject } from "../types";
+import { InjectedReducers, AnyReducer, AnyObject, ReducerWrapper } from "../types";
 import { fromJS } from "immutable";
 import { MapStateToProps } from "react-redux";
 const hoistNonReactStatics = require("hoist-non-react-statics"); // tslint:disable-line no-var-requires
@@ -33,7 +33,7 @@ export function getIn(obj: AnyObject, keyPath: string[]) {
   if (!obj) {
     return undefined;
   }
-  
+
   const isImmutable = Boolean(obj.toJS);
   if (isImmutable) {
     return obj.getIn(keyPath);
@@ -66,8 +66,8 @@ export function setIn(obj: AnyObject, keyPath: string[], newValue: any) {
   return newObj;
 }
 
-export const combineReducers = (injectedReducers: InjectedReducers) => {
-  return (state: any, action: AnyAction) => {
+export const combineReducers = (injectedReducers: InjectedReducers, reducerWrappers: ReducerWrapper[] = []) => {
+  const unwrappedReducer = (state: any, action: AnyAction) => {
     let newState = state;
     injectedReducers.forEach((reducersMap) => {
       Object.keys(reducersMap).forEach((reducerKey) => {
@@ -81,4 +81,7 @@ export const combineReducers = (injectedReducers: InjectedReducers) => {
 
     return newState;
   };
+
+  const rootReducer = compose<AnyReducer>(...reducerWrappers)(unwrappedReducer);
+  return rootReducer;
 };

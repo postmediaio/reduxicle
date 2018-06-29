@@ -4,7 +4,8 @@ lib
 bundles
 node_modules
 stats.json
-*.d.ts
+index.d.ts
+internals.d.ts
 
 # Cruft
 .DS_Store

@@ -7,13 +7,13 @@ const hoistNonReactStatics = require("hoist-non-react-statics"); // tslint:disab
 export type WithSagaOptions = { key: string, saga: AnyFunction, mode?: SagaInjectionModes } | AnyFunction;
 
 const withSaga = (options: WithSagaOptions) => {
-  return (UnwrappedComponent: React.ComponentClass & { key?: string }) => {
+  return (UnwrappedComponent: React.ComponentClass & { key?: string }): React.ComponentClass => {
     const resolvedOptions = {
       key: typeof options === "function" ? UnwrappedComponent.key : (options.key || UnwrappedComponent.key),
       saga: typeof options === "function" ? options : options.saga,
       mode: typeof options === "function" ?
-        SagaInjectionModes.ONCE_TILL_UNMOUNT :
-        (options.mode || SagaInjectionModes.ONCE_TILL_UNMOUNT),
+        SagaInjectionModes.RESTART_ON_REMOUNT :
+        (options.mode || SagaInjectionModes.RESTART_ON_REMOUNT),
     };
 
     class WrappedComponent extends React.PureComponent<AnyObject, { mounted: boolean }> {

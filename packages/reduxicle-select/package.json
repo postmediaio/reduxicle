@@ -1,29 +1,26 @@
 {
-  "name": "@reduxicle/rest",
+  "name": "@reduxicle/select",
   "version": "0.2.0",
   "main": "index.js",
   "author": "Ben Lorantfy <ben@postmedia.io>",
   "license": "MIT",
   "scripts": {
-    "test": "cd ../../ && TEST_PACKAGE=reduxicle-rest yarn test",
-    "build": "gulp build --package=reduxicle-rest",
-    "build:watch": "gulp build:watch --package=reduxicle-rest"
+    "test": "cd ../../ && TEST_PACKAGE=reduxicle-select yarn test",
+    "build": "gulp build --package=reduxicle-select",
+    "build:watch": "gulp build:watch --package=reduxicle-select"
   },
   "files": [
     "lib",
     "index.d.ts",
     "index.js",
-    "internals.js",
     "README.md"
   ],
   "devDependencies": {
     "@types/node": "9",
-    "@types/redux": "^3.6.0",
-    "@types/redux-saga": "^0.10.5",
     "@types/sinon": "^5.0.1",
     "sinon": "^5.1.1"
   },
   "dependencies": {
-    "redux-saga": "^0.16.0"
+    "@reduxicle/core": "x.x.x"
   }
 }

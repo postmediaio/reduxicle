@@ -19,9 +19,9 @@ const state = fromJS({
   ],
 });
 
-export default compose(
+export default (compose(
   withReducer(() => {
     return state;
   }),
   withKey("hockeyPlayers"),
-)(ExampleWithReducer);
+)(ExampleWithReducer) as React.ComponentClass);

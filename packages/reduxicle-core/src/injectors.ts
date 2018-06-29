@@ -1,5 +1,5 @@
 // import { combineReducers } from "redux";
-import { combineReducers } from './utils';
+import { combineReducers } from "./utils";
 import { AnyFunction, AnyReducer, SagaInjectionModes, Store, InjectedSagaDescriptor } from "./types";
 
 export interface IInjectReducer {
@@ -13,11 +13,11 @@ export const injectReducer = ({ key, reducer }: IInjectReducer, store: Store) =>
    * Reducers with more dots in their name (more deeply nested) need to be ran
    * after reducers with less dots in their name. This is so reducers don't
    * replace the state of deeper reducers.
-   * 
+   *
    * We can assume that reducers get ran more often than they're injected, so we should 
    * make the running efficent and do a little more work for the insertion. We can do our 
    * sort/organization on the injection here then instead of where we run them. 
-   * 
+   *
    * The idea is to store the reducers as an array of objects, where each subsequent object
    * in the array is for reducers with one more dot in the key. This way, we can communicate
    * to the store replacer which reducers should get run in what order.
@@ -28,7 +28,7 @@ export const injectReducer = ({ key, reducer }: IInjectReducer, store: Store) =>
   }
 
   store.reduxicle.injectedReducers[numDots][key] = reducer;
-  store.replaceReducer(combineReducers(store.reduxicle.injectedReducers));
+  store.replaceReducer(combineReducers(store.reduxicle.injectedReducers, store.reduxicle.reducerWrappers));
 
   // Need to dispatch an action so that the reducers re-trigger
   store.dispatch({ type: "@@reduxicle/inject-reducer", key });

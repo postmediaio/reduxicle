@@ -64,6 +64,16 @@ describe("withLoadItems", () => {
     expect(wrapper.find(UnwrappedComponent).props().orders).toEqual(mockOrders);
   });
 
+  it("should pass the body to the request service", async () => {
+    const UnwrappedComponent = () => null;
+    const Component = withLoadItems({ name: "orders", url: "/orders" })(UnwrappedComponent);
+    const wrapper = render(<Component />);
+    wrapper.find(UnwrappedComponent).prop("loadOrders")({ query: { q: "Sam" } });
+    xhrStubs[0].respond(200, null, JSON.stringify(null));
+    await finishAllPromises();
+    expect(JSON.parse(xhrStubs[0].requestBody)).toEqual({ query: { q: "Sam" } });
+  });
+
   it("should fail to fetch the orders because we're missing the RestPlugin", async () => {
     const UnwrappedComponent = () => null;
     const Component = withLoadItems({ name: "orders", url: "/orders" })(UnwrappedComponent);
@@ -74,7 +84,6 @@ describe("withLoadItems", () => {
     );
     wrapper.find(UnwrappedComponent).prop("loadOrders")();
     wrapper.update();
-
 
     expect(wrapper.find(UnwrappedComponent).props().loadOrdersError).toEqual(
       "Missing plugin configuration for RestPlugin",

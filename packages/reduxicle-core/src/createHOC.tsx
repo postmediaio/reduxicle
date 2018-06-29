@@ -52,7 +52,7 @@ export const createInitialState = (state: any, options: ICreateInitialStateOptio
 export interface ICreateHOC {
   createNames: () => IPattern;
   createKey: (parentKey: string, names: INames) => string;
-  createInitialState: () => AnyObject|AnyGenerator;
+  createInitialState: () => AnyObject|AnyGenerator|null;
   createReducer?: (inititalState: AnyObject, options: { prefix: string }) => AnyReducer;
   createSaga?: (userOptions: AnyObject, options: { prefix: string, pluginContext?: IReduxicleContext["pluginContext"] }) => AnyFunction;
   mapStateToProps: (state: AnyObject, options: { names: INames }) => AnyObject;
@@ -61,7 +61,7 @@ export interface ICreateHOC {
 
 const createHOC = (createHOCOptions: ICreateHOC) => {
   return (userOptions: AnyObject) => {
-    return (UnwrappedComponent: React.ComponentType & { key?: string }) => {
+    return (UnwrappedComponent: React.ComponentType & { key?: string }): React.ComponentClass => {
       const pattern = createHOCOptions.createNames();
       const names = generateNamesFromPattern(pattern, userOptions);
       const parentKey = userOptions.key || UnwrappedComponent.key || "";
@@ -87,7 +87,11 @@ const createHOC = (createHOCOptions: ICreateHOC) => {
           }
 
           if (createHOCOptions.createSaga) {
-            const saga = createHOCOptions.createSaga(userOptions, { prefix, pluginContext: this.props.reduxicle.pluginContext });
+            const saga = createHOCOptions.createSaga(
+              userOptions,
+              { prefix, pluginContext: this.props.reduxicle.pluginContext }
+            );
+
             this.props.reduxicle.injectSaga({
               key,
               saga,

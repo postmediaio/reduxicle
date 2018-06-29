@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`index should not have changed API 1`] = `
+Object {
+  "withSelectItem": [Function],
+}
+`;

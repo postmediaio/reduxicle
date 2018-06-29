@@ -1,11 +1,12 @@
 import { applyMiddleware, compose, createStore as createReduxStore } from "redux";
 import { AnyAction } from "redux";
-import { Store, InjectedReducers, IReduxicleConfig, IPluginContext } from "./types";
+import { Store, InjectedReducers, IReduxicleConfig, ReducerWrapper, IPluginContext, AnyReducer } from "./types";
 import createSagaMiddleware from "redux-saga";
 import { fromJS } from "immutable";
 import { combineReducers } from "./utils";
 
 const createStore = (config: IReduxicleConfig = {}): Store => {
+  const reducerWrappers: ReducerWrapper[] = [];
   const injectedReducers: InjectedReducers = [];
   const sagaMiddleware = createSagaMiddleware();
   const plugins = config.plugins || [];
@@ -40,6 +41,10 @@ const createStore = (config: IReduxicleConfig = {}): Store => {
       injectedReducers[numDots][plugin.key] = plugin.reducer;
     }
 
+    if (plugin.reducerWrapper) {
+      reducerWrappers.push(plugin.reducerWrapper);
+    }
+
     if (plugin.key && plugin.context) {
       pluginContext[plugin.key] = plugin.context;
     }
@@ -48,9 +53,14 @@ const createStore = (config: IReduxicleConfig = {}): Store => {
     applyMiddleware(...middlewares),
   ];
 
+  const rootReducer = combineReducers(injectedReducers, reducerWrappers);
+
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose
   const composeEnhancers =
-    process.env.NODE_ENV !== "production" &&
+    // It's fine to let users see their own data. However, we might want to add a config
+    // option to show/hide dev tools in production
+    // https://medium.com/@zalmoxis/using-redux-devtools-in-production-4c5b56c5600f
+    // process.env.NODE_ENV !== "production" &&
     typeof window === "object" &&
     (window as Window & { __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: any }).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
       ? (window as Window & { __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: any }).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
@@ -61,12 +71,13 @@ const createStore = (config: IReduxicleConfig = {}): Store => {
 
   const enhancer = composeEnhancers(...enhancers);
   const store = createReduxStore(
-    combineReducers(injectedReducers),
+    rootReducer,
     useImmutableJS ? fromJS({}) : {},
     enhancer,
   ) as Store;
 
   store.reduxicle = {
+    reducerWrappers,
     injectedReducers,
     injectedSagas: {},
     runSaga: sagaMiddleware.run,

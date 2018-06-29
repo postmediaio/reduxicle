@@ -1,13 +1,18 @@
+const path = require('path');
 const convert = require('koa-connect');
 const history = require('connect-history-api-fallback');
 
 module.exports = {
   mode: 'development',
-  entry: './src/index.tsx',
+  entry: {
+    index: [path.resolve(__dirname, 'src/index.tsx')]
+  },
   serve: {
-    add: (app, middleware, options) => {
+    content: [__dirname],
+    add: (app) => {
       app.use(convert(history()));
     },
+    port: 5000,
   },
   output: {
     filename: 'bundle.js'
@@ -17,8 +22,9 @@ module.exports = {
   },
   module: {
     rules: [{
-      test: /\.(ts|js)x?$/, // Transform all .js files required somewhere with Babel
-      use: 'babel-loader'
+      test: /\.(ts|js)x?$/,
+      use: 'ts-loader',
+      include: path.resolve(__dirname, 'src'), 
     }]
   },
   devtool: 'eval-source-map',

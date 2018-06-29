@@ -1,12 +1,12 @@
 import * as React from "react";
 
-import { compose, withKey, withReducer } from "@reduxicle/core";
+import { compose, withKey } from "@reduxicle/core";
 import { withDialog } from "@reduxicle/dialog";
 
 export interface IExampleWithDialog {
-  openAddDialog: () => {};
-  closeAddDialog: () => {};
-  isAddDialogOpen: boolean;
+  openAddDialog?: () => {};
+  closeAddDialog?: () => {};
+  isAddDialogOpen?: boolean;
 }
 
 class ExampleWithDialog extends React.Component<IExampleWithDialog> {
