@@ -18,7 +18,7 @@ export default class StoreProvider extends React.PureComponent<IStoreProvider> {
   }
 
   public wrapWithWrappers(children: React.ReactNode) {
-    let topWrapper = <>{children}</>;
+    let topWrapper = <div>{children}</div>; // enzyme has trouble using Fragments
     if (this.props.config && this.props.config.plugins) {
       const wrappers = this.props.config.plugins.map((plugin) => plugin.wrapper).filter(Boolean);
       wrappers.forEach((wrapper) => {
