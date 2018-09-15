@@ -1,11 +1,10 @@
 import * as React from "react";
 import { getDisplayName } from "./utils";
-import { AnyReducer } from "./types";
+import { AnyReducer, ComponentTypeWithKey } from "./types";
 import { injectReducer } from "./injectors";
 const hoistNonReactStatics = require("hoist-non-react-statics"); // tslint:disable-line no-var-requires
 
 export type WithReducerOptions = { key: string, reducer: AnyReducer } | AnyReducer;
-export type ComponentTypeWithKey<P> = React.ComponentType<P> & { key: string };
 
 const withReducer = (options: WithReducerOptions) => {
   return <P extends object>(UnwrappedComponent: ComponentTypeWithKey<P>): ComponentTypeWithKey<P> => {

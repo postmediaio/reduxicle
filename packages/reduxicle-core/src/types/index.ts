@@ -66,3 +66,5 @@ export enum SagaInjectionModes {
   DAEMON = "@@saga-injector/daemon",
   ONCE_TILL_UNMOUNT = "@@saga-injector/once-till-unmount",
 }
+
+export type ComponentTypeWithKey<P> = React.ComponentType<P> & { key: string };
