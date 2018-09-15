@@ -47,7 +47,7 @@ const withDialog = createHOC({
   mapStateToProps: (state: any, { names }: { names: any}) => ({
     [names.isDialogOpen]: getIn(state, ["open"]),
   }),
-  mapDispatchToProps: (dispatch: Dispatch<any>, { names, prefix }: { names: any, prefix: string}) => ({
+  mapDispatchToProps: (dispatch: Dispatch, { names, prefix }: { names: any, prefix: string}) => ({
     [names.openDialog]: () => dispatch({ type: `${prefix}/OPEN` }),
     [names.closeDialog]: () => dispatch({ type: `${prefix}/CLOSE` }),
   }),
