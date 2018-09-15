@@ -1,26 +1,27 @@
 import * as React from "react";
 import { getDisplayName } from "./utils";
-import { AnyReducer, AnyObject } from "./types";
+import { AnyReducer } from "./types";
 import { injectReducer } from "./injectors";
 const hoistNonReactStatics = require("hoist-non-react-statics"); // tslint:disable-line no-var-requires
 
 export type WithReducerOptions = { key: string, reducer: AnyReducer } | AnyReducer;
+export type ComponentTypeWithKey<P> = React.ComponentType<P> & { key: string };
 
 const withReducer = (options: WithReducerOptions) => {
-  return (UnwrappedComponent: React.ComponentClass & { key: string }): React.ComponentClass => {
+  return <P extends object>(UnwrappedComponent: ComponentTypeWithKey<P>): ComponentTypeWithKey<P> => {
     const resolvedOptions = {
       key: typeof options === "function" ? UnwrappedComponent.key : (options.key || UnwrappedComponent.key),
       reducer: typeof options === "function" ? options : options.reducer,
     };
 
-    class WrappedComponent extends React.PureComponent<AnyObject, { mounted: boolean }> {
+    class WrappedComponent extends React.PureComponent<P, { mounted: boolean }> {
       public static displayName = `withReducer(${getDisplayName(UnwrappedComponent)})`;
       public static key = resolvedOptions.key;
       public static contextTypes = {
         store: () => null,
       };
 
-      constructor(props: AnyObject) {
+      constructor(props: P) {
         super(props);
         this.state = { mounted: false };
       }

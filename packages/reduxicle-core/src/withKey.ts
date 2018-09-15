@@ -1,10 +1,7 @@
-import { ComponentClass } from "react";
-
-export type ComponentClassWithKey = ComponentClass & { key?: string };
-const withKey = (key: string) => {
-  return (Component: ComponentClassWithKey): ComponentClassWithKey => {
+const withKey = <K extends string>(key: K) => {
+  return <T extends object>(Component: T & { key?: string }): T & { key: K } => {
     Component.key = key;
-    return Component;
+    return Component as T & { key: K };
   };
 };
 

@@ -41,5 +41,6 @@ module.exports = {
   },
   "globals": {
     "__TS_CONFIG__": "<rootDir>/tsconfig.json"
-  }
+  },
+  "testURL": 'http://localhost'
 }

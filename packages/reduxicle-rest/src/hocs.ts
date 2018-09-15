@@ -75,7 +75,7 @@ export const withLoadItems = createHOC({
     [names.isLoadingItems]: getIn(state, ["loading"]),
     [names.loadItemsError]: getIn(state, ["error"]),
   }),
-  mapDispatchToProps: (dispatch: Dispatch<any>, { names, prefix }: { names: any, prefix: string}) => ({
+  mapDispatchToProps: (dispatch: Dispatch, { names, prefix }: { names: any, prefix: string}) => ({
     [names.loadItems]: (args: {}) => dispatch({ type: `${prefix}/LOAD_ITEMS`, ...args }),
   }),
 });

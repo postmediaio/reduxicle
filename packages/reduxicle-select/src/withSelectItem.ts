@@ -28,7 +28,7 @@ export const withSelectItem = createHOC({
   mapStateToProps: (state: any, { names }) => ({
     [names.selectedItem]: state,
   }),
-  mapDispatchToProps: (dispatch: Dispatch<any>, { names, prefix }: { names: any, prefix: string}) => ({
+  mapDispatchToProps: (dispatch: Dispatch, { names, prefix }: { names: any, prefix: string}) => ({
     [names.selectItem]: (item: any) => dispatch({ type: `${prefix}/SELECT_ITEM`, item }),
   }),
 });

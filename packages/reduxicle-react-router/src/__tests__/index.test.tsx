@@ -34,8 +34,7 @@ describe("ReactRouterPlugin", () => {
       router: expect.objectContaining({
         location: expect.objectContaining({
           hash: "",
-          pathname: "blank",
-          search: "",
+          pathname: "/",
         }),
       }),
     });
