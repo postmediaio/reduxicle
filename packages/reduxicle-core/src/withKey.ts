@@ -1,7 +1,11 @@
-const withKey = <K extends string>(key: K) => {
-  return <T extends object>(Component: T & { key?: string }): T & { key: K } => {
-    Component.key = key;
-    return Component as T & { key: K };
+import React from "react";
+import { ComponentTypeWithKey } from "./types";
+
+const withKey = (key: string) => {
+  return <P extends object>(Component: React.ComponentType<P>): ComponentTypeWithKey<P> => {
+    const ComponentWithKey: ComponentTypeWithKey<P> = Component as any;
+    ComponentWithKey.key = key;
+    return ComponentWithKey;
   };
 };
 
