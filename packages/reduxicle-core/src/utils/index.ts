@@ -82,6 +82,6 @@ export const combineReducers = (injectedReducers: InjectedReducers, reducerWrapp
     return newState;
   };
 
-  const rootReducer = compose<AnyReducer>(...reducerWrappers)(unwrappedReducer);
+  const rootReducer = compose<any>(...reducerWrappers)(unwrappedReducer);
   return rootReducer;
 };

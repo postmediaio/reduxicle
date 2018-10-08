@@ -59,7 +59,7 @@ export type Store = ReduxStore & {
 
 export type AnyGenerator = Iterator<any>;
 
-export type AnyReducer = (state: AnyObject, action: AnyAction) => object;
+export type AnyReducer = Function; // tslint:disable-line ban-types
 
 export enum SagaInjectionModes {
   RESTART_ON_REMOUNT = "@@saga-injector/restart-on-remount",
