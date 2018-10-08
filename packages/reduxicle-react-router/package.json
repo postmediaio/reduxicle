@@ -1,6 +1,6 @@
 {
   "name": "@reduxicle/react-router",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "main": "index.js",
   "author": "Ben Loranty <ben@postmedia.io>",
   "license": "MIT",
