@@ -34,6 +34,7 @@ const withSaga = (options: WithSagaOptions) => {
             key: resolvedOptions.key,
             mode: resolvedOptions.mode,
             saga: resolvedOptions.saga,
+            props: this.props,
           }, this.context.store);
         }
 
