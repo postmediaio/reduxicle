@@ -27,7 +27,7 @@ export interface IReduxicleConfig extends IReduxicleConfigWithoutPlugins {
 
 export interface IReduxicleContext {
   config: IReduxicleConfig;
-  runSaga: (saga: AnyFunction) => Task;
+  runSaga: (saga: AnyFunction, props: object) => Task;
   reducerWrappers: ReducerWrapper[];
   injectedReducers: InjectedReducers;
   injectedSagas: {

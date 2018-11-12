@@ -95,6 +95,7 @@ const createHOC = (createHOCOptions: ICreateHOC) => {
             this.props.reduxicle.injectSaga({
               key,
               saga,
+              props: this.props,
             });
           }
 

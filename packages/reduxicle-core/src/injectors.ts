@@ -36,11 +36,12 @@ export const injectReducer = ({ key, reducer }: IInjectReducer, store: Store) =>
 
 export interface IInjectSaga {
   key: string;
+  props: {};
   saga: AnyFunction;
   mode?: SagaInjectionModes;
 }
 
-export const injectSaga = ({ key, saga, mode = SagaInjectionModes.RESTART_ON_REMOUNT }: IInjectSaga, store: Store) => {
+export const injectSaga = ({ key, saga, props, mode = SagaInjectionModes.RESTART_ON_REMOUNT }: IInjectSaga, store: Store) => {
   const oldDescriptor = store.reduxicle.injectedSagas[key];
   let hasSaga = Boolean(oldDescriptor);
   if (process.env.NODE_ENV !== "production") {
@@ -55,7 +56,7 @@ export const injectSaga = ({ key, saga, mode = SagaInjectionModes.RESTART_ON_REM
     store.reduxicle.injectedSagas[key] = {
       mode,
       saga,
-      task: store.reduxicle.runSaga(saga),
+      task: store.reduxicle.runSaga(saga, props),
     };
   }
 };
