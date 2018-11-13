@@ -1,5 +1,5 @@
 // import { combineReducers } from "redux";
-import { combineReducers } from "./utils";
+import { combineReducersAndWrappers } from "./utils";
 import { AnyFunction, AnyReducer, SagaInjectionModes, Store, InjectedSagaDescriptor } from "./types";
 
 export interface IInjectReducer {
@@ -28,7 +28,7 @@ export const injectReducer = ({ key, reducer }: IInjectReducer, store: Store) =>
   }
 
   store.reduxicle.injectedReducers[numDots][key] = reducer;
-  store.replaceReducer(combineReducers(store.reduxicle.injectedReducers, store.reduxicle.reducerWrappers));
+  store.replaceReducer(combineReducersAndWrappers(store.reduxicle.injectedReducers, store.reduxicle.reducerWrappers));
 
   // Need to dispatch an action so that the reducers re-trigger
   store.dispatch({ type: "@@reduxicle/inject-reducer", key });

@@ -1,6 +1,6 @@
 {
   "name": "@reduxicle/core",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "The reduxicle core",
   "main": "index.js",
   "author": "Ben Lorantfy <ben@postmedia.io>",
