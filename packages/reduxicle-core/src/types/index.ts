@@ -19,6 +19,8 @@ export interface IReduxiclePlugin {
 
 export interface IReduxicleConfigWithoutPlugins {
   useImmutableJS?: boolean;
+  superReducer?: any;
+  superSaga?: any;
 }
 
 export interface IReduxicleConfig extends IReduxicleConfigWithoutPlugins {
@@ -48,9 +50,11 @@ export type AnyObject = {
   [key: string]: any;
 };
 
-export type InjectedReducers = Array<{
+export type ReducerMap = {
   [key: string]: AnyReducer,
-}>;
+}
+
+export type InjectedReducers = Array<ReducerMap>;
 
 export type AnyFunction = (...params: any[]) => any;
 export type Store = ReduxStore & {

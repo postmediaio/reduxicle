@@ -66,17 +66,29 @@ export function setIn(obj: AnyObject, keyPath: string[], newValue: any) {
   return newObj;
 }
 
-export const combineReducers = (injectedReducers: InjectedReducers, reducerWrappers: ReducerWrapper[] = []) => {
+export const reduceReducerMap = (reducersMap: any, newState: any, state: any, action: any) => {
+  Object.keys(reducersMap).forEach((reducerKey) => {
+    const keyPath = reducerKey.split(".");
+    const reducer = reducersMap[reducerKey];
+    const oldLocalState = getIn(state, keyPath);
+    const newLocalState = reducer(oldLocalState, action);
+    newState = setIn(newState, keyPath, newLocalState);
+  });
+
+  return newState;
+};
+
+export const combineReducers = (reducersMap: any) => {
+  return (state: any, action: any) => {
+    return reduceReducerMap(reducersMap, state, state, action);
+  };
+};
+
+export const combineReducersAndWrappers = (injectedReducers: InjectedReducers, reducerWrappers: ReducerWrapper[] = []) => {
   const unwrappedReducer = (state: any, action: AnyAction) => {
     let newState = state;
     injectedReducers.forEach((reducersMap) => {
-      Object.keys(reducersMap).forEach((reducerKey) => {
-        const keyPath = reducerKey.split(".");
-        const reducer = reducersMap[reducerKey];
-        const oldLocalState = getIn(state, keyPath);
-        const newLocalState = reducer(oldLocalState, action);
-        newState = setIn(newState, keyPath, newLocalState);
-      });
+      newState = reduceReducerMap(reducersMap, newState, state, action);
     });
 
     return newState;

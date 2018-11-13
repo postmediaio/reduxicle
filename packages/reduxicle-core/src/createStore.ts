@@ -3,7 +3,7 @@ import { AnyAction } from "redux";
 import { Store, InjectedReducers, IReduxicleConfig, ReducerWrapper, IPluginContext, AnyReducer } from "./types";
 import createSagaMiddleware from "redux-saga";
 import { fromJS } from "immutable";
-import { combineReducers } from "./utils";
+import { combineReducersAndWrappers } from "./utils";
 
 const createStore = (config: IReduxicleConfig = {}): Store => {
   const reducerWrappers: ReducerWrapper[] = [];
@@ -53,7 +53,15 @@ const createStore = (config: IReduxicleConfig = {}): Store => {
     applyMiddleware(...middlewares),
   ];
 
-  const rootReducer = combineReducers(injectedReducers, reducerWrappers);
+  const combinedReducer = combineReducersAndWrappers(injectedReducers, reducerWrappers);
+  const rootReducer = (state: any, action: any) => {
+    let newState = state;
+    if (config.superReducer) {
+      newState = config.superReducer(newState, action);
+    }
+    newState = combinedReducer(newState, action);
+    return newState;
+  };
 
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose
   const composeEnhancers =
@@ -75,6 +83,10 @@ const createStore = (config: IReduxicleConfig = {}): Store => {
     useImmutableJS ? fromJS({}) : {},
     enhancer,
   ) as Store;
+
+  if (config.superSaga) {
+    sagaMiddleware.run(config.superSaga);
+  }
 
   store.reduxicle = {
     reducerWrappers,
