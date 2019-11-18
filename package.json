@@ -1,7 +1,7 @@
 {
   "name": "reduxicle",
   "version": "0.2.0",
-  "description": "Reduxicle is a collection of factories and HOCs to add a layer of abstraction on top of redux.",
+  "description": "Reduxicle is a collection of factories and HOCs to add a layer of abstraction on top of redux",
   "main": "index.js",
   "author": "Ben Lorantfy <ben@postmedia.io>",
   "license": "MIT",
