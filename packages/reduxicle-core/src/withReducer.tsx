@@ -20,26 +20,17 @@ const withReducer = (options: WithReducerOptions) => {
         store: () => null,
       };
 
-      constructor(props: P) {
+      constructor(props: P, context: any) {
         super(props);
-        this.state = { mounted: false };
-      }
 
-      public componentDidMount() {
         injectReducer({
           key: resolvedOptions.key,
           reducer: resolvedOptions.reducer,
-        }, this.context.store);
-
-        this.setState({ mounted: true });
+        }, context.store);
       }
 
       public render() {
-        if (this.state.mounted) {
-          return <UnwrappedComponent {...(this.props)} />;
-        }
-
-        return null;
+        return <UnwrappedComponent {...(this.props)} />;
       }
     }
 

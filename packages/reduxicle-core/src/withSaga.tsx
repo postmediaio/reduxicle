@@ -23,24 +23,17 @@ const withSaga = (options: WithSagaOptions) => {
         store: () => null,
       };
 
-      constructor(props: AnyObject) {
+      constructor(props: AnyObject, context: any) {
         super(props);
-        this.state = { mounted: false };
-      }
-
-      public componentDidMount() {
+        
         if (resolvedOptions.key) {
           injectSaga({
             key: resolvedOptions.key,
             mode: resolvedOptions.mode,
             saga: resolvedOptions.saga,
             props: this.props,
-          }, this.context.store);
+          }, context.store);
         }
-
-        // TODO: Warn if not using key
-
-        this.setState({ mounted: true });
       }
 
       public componentWillUnmount() {
@@ -52,11 +45,7 @@ const withSaga = (options: WithSagaOptions) => {
       }
 
       public render() {
-        if (this.state.mounted) {
-          return <UnwrappedComponent {...(this.props)} />;
-        }
-
-        return null;
+        return <UnwrappedComponent {...(this.props)} />;
       }
     }
 
