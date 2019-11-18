@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/). 
 > - :house:      [Internal]
 > - :nail_care:  [Polish]
 
+## [0.8.0]
+#### :bug: Bug Fix
+- Inject reducer/saga on construct instead of mount, fixing a bug where reducers/sagas could not be loaded in time for actions to be dispatched
+
 ## [0.6.0]
 #### :rocket: New Feature
 - Support passing props from container to saga as the first argument
