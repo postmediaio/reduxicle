@@ -1,5 +1,5 @@
 # ⚠️ Deprecated ⚠️
-This package is deprecated in favour of (redux-injectors)[https://github.com/react-boilerplate/redux-injectors]. Please use that instead.
+This package is deprecated in favour of [redux-injectors](https://github.com/react-boilerplate/redux-injectors). Please use that instead.
 
 # reduxicle
 Reduxicle is a collection of factories and HOCs to add a layer of abstraction on top of redux. It uses redux under the hood but injects props into your components so you write less code.
