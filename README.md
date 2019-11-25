@@ -1,4 +1,4 @@
-# Deprecated
+# ⚠️ Deprecated ⚠️
 This package is deprecated in favour of (redux-injectors)[https://github.com/react-boilerplate/redux-injectors]. Please use that instead.
 
 # reduxicle
