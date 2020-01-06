@@ -63,11 +63,11 @@ job-templates:
                             echo $new_package > package.json
                         fi
 
-                        echo "access=public" >> .npmrc
-                        echo "scope=@reduxicle" >> .npmrc
-                        echo "registry=https://registry.npmjs.com" >> .npmrc
-                        echo "//registry.npmjs.com/:_authToken=$NPM_PUBLIC_REGISTRY_PUBLISH_TOKEN" >> .npmrc
-                        
+                        echo "registry=https://nexus.pmiodev.postmedia.io/repository/npm-group/" > .npmrc
+                        echo "email=devops@postmedia.com" >> .npmrc
+                        echo "always-auth=true" >> .npmrc
+                        echo "//nexus.pmiodev.postmedia.io/repository/npm-private/:_authToken=$NEXUS_TOKEN" >> .npmrc
+
                         latest_version=$(npm view @reduxicle/$folder_name version || echo "0.0.0")
                         if [[ $latest_version == "0.0.0" ]]; then
                             echo "Package wasn't found in the npm registry, but that's ok, publishing anyway..."
@@ -94,7 +94,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: 
+          keys:
             - dep-v1-{{ checksum "yarn.lock" }}
             - dep-v1-
       - run:
@@ -128,7 +128,7 @@ jobs:
                 should_build_everything=0
             fi
             echo "Detected dest_branch is $dest_branch"
-            
+
             if [[ $should_build_everything = 0 ]]; then
                 echo "Decided to only build packages which have changed"
                 lastest_commit_to_dest_branch="$(git ls-remote git://github.com/$username/$project.git refs/heads/$dest_branch | cut -f 1)"
@@ -235,7 +235,7 @@ workflows:
       - prepare
       - build-core:
           requires:
-            - prepare        
+            - prepare
       - build-non-core:
           requires:
             - build-core
