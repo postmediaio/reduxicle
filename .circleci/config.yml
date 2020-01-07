@@ -53,7 +53,7 @@ job-templates:
                         cd packages/$project_name
 
                         # We need to replace the core dependency with "rc"
-                        # This is because x.x.x gets the latest version, but we want the rc version
+                        # This is because x.x.x gets the latest version, but we want the rc versions
                         # See: https://semver.npmjs.com/
                         reduxicle_core_version=$(cat package.json | jq '.dependencies["@reduxicle/core"]')
                         echo "reduxicle_core_version is $reduxicle_core_version"
